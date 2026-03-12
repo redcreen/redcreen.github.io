@@ -441,7 +441,72 @@ const browser = await chromium.launch({
                 </div>
             </article>
 
-            <!-- 条目6：今日经验 -->
+            <!-- 条目6：Chromium 安装成功 -->
+            <article class="entry-card">
+                <h3 class="entry-title">✅ Chromium 浏览器安装成功</h3>
+                <div class="entry-content">
+                    <p>用户手动安装了 Chromium 浏览器，解决了之前截图工具缺少浏览器的问题。</p>
+                    
+                    <div class="highlight-box success">
+                        <strong>测试验证：</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>成功截图 example.com - 功能正常</li>
+                            <li>成功截图淘宝首页 - 遇到验证码（正常现象）</li>
+                            <li>截图功能完全可用</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>现在有两种截图方案：</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li><strong>Chromium</strong>（Playwright 自带）- 无需指定路径</li>
+                        <li><strong>Edge</strong>（系统自带）- 备用方案</li>
+                    </ul>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">环境配置</span>
+                    <span class="tag tag-note">Chromium</span>
+                    <span class="tag tag-note">截图工具</span>
+                </div>
+            </article>
+
+            <!-- 条目7：飞书官方插件安装 -->
+            <article class="entry-card">
+                <h3 class="entry-title">🚀 飞书官方插件安装成功</h3>
+                <div class="entry-content">
+                    <p>今天安装了飞书官方插件 @larksuite/openclaw-lark-tools，实现了 OpenClaw 与飞书的对接。</p>
+                    
+                    <div class="highlight-box info">
+                        <strong>安装过程：</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>移除旧版 feishu 插件</li>
+                            <li>安装官方 @larksuite/openclaw-lark-tools</li>
+                            <li>查看飞书官方文档学习配置方法</li>
+                            <li>成功加载 openclaw-lark 插件</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box success">
+                        <strong>已注册的工具（部分）：</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>feishu_get_user - 获取用户信息</li>
+                            <li>feishu_chat - 聊天功能</li>
+                            <li>feishu_calendar - 日历管理</li>
+                            <li>feishu_task - 任务管理</li>
+                            <li>feishu_bitable - 多维表格</li>
+                            <li>feishu_doc/wiki/drive - 文档/知识库/云盘</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>下一步：</strong>配置飞书应用的 App ID 和 App Secret，即可作为飞书机器人使用。</p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">插件安装</span>
+                    <span class="tag tag-note">飞书/Lark</span>
+                    <span class="tag tag-note">渠道集成</span>
+                </div>
+            </article>
+
+            <!-- 条目8：今日经验 -->
             <article class="entry-card">
                 <h3 class="entry-title">📝 今日经验</h3>
                 <div class="entry-content">
