@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>最受欢迎的 Skills - OpenClaw 使用指南</title>
+    <title>最受欢迎的 Skills (Top 20) - OpenClaw 使用指南</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,12 +58,12 @@
         <!-- 主内容区 -->
         <main class="content">
             <header class="page-header">
-                <h1>⭐ 最受欢迎的 Skills</h1>
-                <p class="subtitle">ClawHub 官方推荐的热门 Skills（实时截图更新）</p>
+                <h1>⭐ 最受欢迎的 Skills (Top 20)</h1>
+                <p class="subtitle">ClawHub 官方推荐的热门 Skills，基于实时截图更新</p>
             </header>
 
             <div class="content-section">
-                <p>以下是 <a href="https://clawhub.ai/skills" target="_blank">clawhub.ai/skills</a> 上的热门 Skills，按官方排序：</p>
+                <p>以下是 <a href="https://clawhub.ai/skills" target="_blank">clawhub.ai/skills</a> 上的热门 Skills，按官方排序展示前 20 名：</p>
             </div>
 
             <div class="skills-list">
@@ -72,7 +72,17 @@
                     <div class="skill-rank">1</div>
                     <div class="skill-info">
                         <h3>📝 self-improving-agent</h3>
-                        <p>捕获学习经验、错误和修正，实现持续改进。自动记录错误、用户纠正和最佳实践。</p>
+                        <p class="skill-brief">捕获学习经验、错误和修正，实现持续改进</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>自动记录命令失败、用户纠正、API 错误等</li>
+                                <li>记录到 .learnings/ERRORS.md、LEARNINGS.md、FEATURE_REQUESTS.md</li>
+                                <li>支持将重要学习升级到 CLAUDE.md、AGENTS.md、SOUL.md</li>
+                                <li>提供错误检测、学习提取、自动改进的完整工作流</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>当命令失败、用户纠正你、发现知识过时、找到更好方法时自动记录</p>
+                        </div>
                         <code>npx clawhub install self-improving-agent</code>
                     </div>
                 </div>
@@ -82,7 +92,16 @@
                     <div class="skill-rank">2</div>
                     <div class="skill-info">
                         <h3>🎯 First Skill</h3>
-                        <p>帮助用户发现和入门 skills，当用户问"How do I..."时提供引导。</p>
+                        <p class="skill-brief">帮助用户发现和入门 skills</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>当用户问"How do I..."时提供引导</li>
+                                <li>帮助发现适合的 skills</li>
+                                <li>提供入门指导和示例</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>新用户入门、发现 skills、学习如何使用</p>
+                        </div>
                         <code>npx clawhub install first-skill</code>
                     </div>
                 </div>
@@ -92,7 +111,17 @@
                     <div class="skill-rank">3</div>
                     <div class="skill-info">
                         <h3>📄 Summarize</h3>
-                        <p>从 URL、播客和本地文件中总结或提取文本/转录内容。</p>
+                        <p class="skill-brief">从 URL、播客和本地文件中总结或提取内容</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>总结网页内容</li>
+                                <li>提取播客/视频转录</li>
+                                <li>处理本地文件</li>
+                                <li>支持多种格式（PDF、文本、网页等）</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>快速了解长文内容、提取关键信息、生成摘要</p>
+                        </div>
                         <code>npx clawhub install summarize</code>
                     </div>
                 </div>
@@ -102,7 +131,18 @@
                     <div class="skill-rank">4</div>
                     <div class="skill-info">
                         <h3>🌐 Agent Browser</h3>
-                        <p>AI 代理的浏览器自动化 CLI，支持网页交互、表单填写、截图等。</p>
+                        <p class="skill-brief">AI 代理的浏览器自动化 CLI</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>网页导航和截图</li>
+                                <li>表单填写和按钮点击</li>
+                                <li>数据提取和网页抓取</li>
+                                <li>支持登录、Cookie、Session 管理</li>
+                                <li>可视化浏览器调试</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>网页截图、自动化测试、数据抓取、表单提交</p>
+                        </div>
                         <code>npx clawhub install agent-browser</code>
                     </div>
                 </div>
@@ -112,7 +152,18 @@
                     <div class="skill-rank">5</div>
                     <div class="skill-info">
                         <h3>📧 GWS (Google Workspace)</h3>
-                        <p>Google Workspace CLI，支持 Gmail、Calendar、Drive、Contacts、Sheets、Docs 等。</p>
+                        <p class="skill-brief">Google Workspace CLI 集成</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>Gmail 邮件管理</li>
+                                <li>Calendar 日历操作</li>
+                                <li>Drive 文件管理</li>
+                                <li>Sheets 表格操作</li>
+                                <li>Docs 文档编辑</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>邮件自动化、日程管理、文档处理、表格数据分析</p>
+                        </div>
                         <code>npx clawhub install gws</code>
                     </div>
                 </div>
@@ -122,7 +173,17 @@
                     <div class="skill-rank">6</div>
                     <div class="skill-info">
                         <h3>🐙 GitHub</h3>
-                        <p>使用 `gh` CLI 与 GitHub 交互，支持仓库管理、Issue、PR 等。</p>
+                        <p class="skill-brief">使用 gh CLI 与 GitHub 交互</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>仓库管理（创建、克隆、推送）</li>
+                                <li>Issue 和 PR 管理</li>
+                                <li>GitHub Actions 工作流</li>
+                                <li>代码审查和合并</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>代码托管、协作开发、CI/CD、项目管理</p>
+                        </div>
                         <code>npx clawhub install github</code>
                     </div>
                 </div>
@@ -132,7 +193,16 @@
                     <div class="skill-rank">7</div>
                     <div class="skill-info">
                         <h3>🧠 ontology</h3>
-                        <p>结构化代理记忆和可组合技能的类型知识图谱。</p>
+                        <p class="skill-brief">结构化代理记忆和可组合技能的类型知识图谱</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>构建知识图谱</li>
+                                <li>类型化的代理记忆</li>
+                                <li>可组合的技能系统</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>复杂知识管理、技能组合、记忆结构化</p>
+                        </div>
                         <code>npx clawhub install ontology</code>
                     </div>
                 </div>
@@ -142,7 +212,16 @@
                     <div class="skill-rank">8</div>
                     <div class="skill-info">
                         <h3>🚀 Proactive Agent</h3>
-                        <p>将 AI 代理从被动响应者转变为主动合作伙伴，预测需求并主动行动。</p>
+                        <p class="skill-brief">将 AI 代理从被动响应者转变为主动合作伙伴</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>预测用户需求</li>
+                                <li>主动采取行动</li>
+                                <li>持续监控和提醒</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>主动助手、智能提醒、预测性工作流</p>
+                        </div>
                         <code>npx clawhub install proactive-agent</code>
                     </div>
                 </div>
@@ -152,7 +231,17 @@
                     <div class="skill-rank">9</div>
                     <div class="skill-info">
                         <h3>🌤️ Weather</h3>
-                        <p>通过 wttr.in 或 Open-Meteo 获取当前天气和预报，无需 API Key。</p>
+                        <p class="skill-brief">获取当前天气和预报，无需 API Key</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>当前天气查询</li>
+                                <li>天气预报</li>
+                                <li>支持全球任意地点</li>
+                                <li>无需 API Key</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>出行规划、天气提醒、日常生活</p>
+                        </div>
                         <code>npx clawhub install weather</code>
                     </div>
                 </div>
@@ -162,8 +251,208 @@
                     <div class="skill-rank">10</div>
                     <div class="skill-info">
                         <h3>🔍 Skill Vector</h3>
-                        <p>技能的向量内存，支持语义搜索、少样本匹配、权限检查和子技能模式。</p>
+                        <p class="skill-brief">技能的向量内存系统</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>语义搜索</li>
+                                <li>少样本匹配</li>
+                                <li>权限检查</li>
+                                <li>子技能模式</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>技能发现、智能匹配、权限管理</p>
+                        </div>
                         <code>npx clawhub install skill-vector</code>
+                    </div>
+                </div>
+
+                <!-- Skill 11 -->
+                <div class="skill-item">
+                    <div class="skill-rank">11</div>
+                    <div class="skill-info">
+                        <h3>🎨 Sonauto</h3>
+                        <p class="skill-brief">AI 音乐生成</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>根据文本生成音乐</li>
+                                <li>支持多种风格</li>
+                                <li>自定义参数</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>音乐创作、背景音乐、创意项目</p>
+                        </div>
+                        <code>npx clawhub install sonauto</code>
+                    </div>
+                </div>
+
+                <!-- Skill 12 -->
+                <div class="skill-item">
+                    <div class="skill-rank">12</div>
+                    <div class="skill-info">
+                        <h3>📝 Self-improving Agent (Proactive + Self-Reflective)</h3>
+                        <p class="skill-brief">主动式 + 自我反思的改进代理</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>主动发现问题</li>
+                                <li>自我反思和改进</li>
+                                <li>持续学习优化</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>高级自动化、持续优化、智能迭代</p>
+                        </div>
+                        <code>npx clawhub install self-improving-agent-proactive</code>
+                    </div>
+                </div>
+
+                <!-- Skill 13 -->
+                <div class="skill-item">
+                    <div class="skill-rank">13</div>
+                    <div class="skill-info">
+                        <h3>📄 Nano PDF</h3>
+                        <p class="skill-brief">PDF 自然语言处理</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>PDF 内容提取</li>
+                                <li>自然语言查询</li>
+                                <li>文档分析</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>PDF 处理、文档分析、信息提取</p>
+                        </div>
+                        <code>npx clawhub install nano-pdf</code>
+                    </div>
+                </div>
+
+                <!-- Skill 14 -->
+                <div class="skill-item">
+                    <div class="skill-rank">14</div>
+                    <div class="skill-info">
+                        <h3>🗄️ Notion</h3>
+                        <p class="skill-brief">Notion 工作空间集成</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>页面管理</li>
+                                <li>数据库操作</li>
+                                <li>内容同步</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>知识管理、项目管理、文档协作</p>
+                        </div>
+                        <code>npx clawhub install notion</code>
+                    </div>
+                </div>
+
+                <!-- Skill 15 -->
+                <div class="skill-item">
+                    <div class="skill-rank">15</div>
+                    <div class="skill-info">
+                        <h3>🎙️ Humanizer</h3>
+                        <p class="skill-brief">文本人性化处理</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>AI 文本人性化</li>
+                                <li>风格转换</li>
+                                <li>自然语言优化</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>内容创作、文本优化、风格调整</p>
+                        </div>
+                        <code>npx clawhub install humanizer</code>
+                    </div>
+                </div>
+
+                <!-- Skill 16 -->
+                <div class="skill-item">
+                    <div class="skill-rank">16</div>
+                    <div class="skill-info">
+                        <h3>📝 Obsidian</h3>
+                        <p class="skill-brief">Obsidian 笔记集成</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>笔记管理</li>
+                                <li>Markdown 处理</li>
+                                <li>知识图谱</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>个人知识管理、笔记整理、知识库构建</p>
+                        </div>
+                        <code>npx clawhub install obsidian</code>
+                    </div>
+                </div>
+
+                <!-- Skill 17 -->
+                <div class="skill-item">
+                    <div class="skill-rank">17</div>
+                    <div class="skill-info">
+                        <h3>🎨 Nano Banana Pro</h3>
+                        <p class="skill-brief">AI 图像生成</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>文本生成图像</li>
+                                <li>图像编辑</li>
+                                <li>风格转换</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>图像创作、设计辅助、创意项目</p>
+                        </div>
+                        <code>npx clawhub install nano-banana-pro</code>
+                    </div>
+                </div>
+
+                <!-- Skill 18 -->
+                <div class="skill-item">
+                    <div class="skill-rank">18</div>
+                    <div class="skill-info">
+                        <h3>🎵 OpenAI Whisper</h3>
+                        <p class="skill-brief">语音转文本</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>音频转录</li>
+                                <li>多语言支持</li>
+                                <li>高精度识别</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>会议记录、播客转录、语音笔记</p>
+                        </div>
+                        <code>npx clawhub install openai-whisper</code>
+                    </div>
+                </div>
+
+                <!-- Skill 19 -->
+                <div class="skill-item">
+                    <div class="skill-rank">19</div>
+                    <div class="skill-info">
+                        <h3>🌐 API Gateway</h3>
+                        <p class="skill-brief">API 网关管理</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>API 路由管理</li>
+                                <li>请求转发</li>
+                                <li>认证和限流</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>API 管理、微服务、网关配置</p>
+                        </div>
+                        <code>npx clawhub install api-gateway</code>
+                    </div>
+                </div>
+
+                <!-- Skill 20 -->
+                <div class="skill-item">
+                    <div class="skill-rank">20</div>
+                    <div class="skill-info">
+                        <h3>🔍 Multi Search Engine</h3>
+                        <p class="skill-brief">多搜索引擎集成</p>
+                        <div class="skill-detail">
+                            <p><strong>核心功能：</strong></p>
+                            <ul>
+                                <li>多引擎搜索</li>
+                                <li>结果聚合</li>
+                                <li>智能排序</li>
+                            </ul>
+                            <p><strong>使用场景：</strong>综合搜索、信息收集、研究分析</p>
+                        </div>
+                        <code>npx clawhub install multi-search-engine</code>
                     </div>
                 </div>
             </div>
@@ -185,8 +474,8 @@ npx clawhub install &lt;skill-name&gt;</code></pre>
 
             <div class="content-section">
                 <h3>📸 实时截图</h3>
-                <p>本页面内容基于实时截图更新：</p>
-                <img src="../images/clawhub-skills-screenshot.png" alt="ClawHub Skills 截图" style="max-width: 100%; border: 1px solid #e0e0e0; border-radius: 8px;">
+                <p>本页面内容基于实时截图更新（2025-03-12）：</p>
+                <img src="../images/clawhub-top20.png" alt="ClawHub Skills Top 20 截图" style="max-width: 100%; border: 1px solid #e0e0e0; border-radius: 8px;">
             </div>
         </main>
     </div>
@@ -243,10 +532,33 @@ npx clawhub install &lt;skill-name&gt;</code></pre>
             margin-bottom: 8px;
         }
 
-        .skill-info p {
+        .skill-brief {
             color: #666;
-            line-height: 1.6;
+            font-size: 14px;
             margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .skill-detail {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .skill-detail p {
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .skill-detail ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .skill-detail li {
+            color: #666;
+            margin-bottom: 4px;
         }
 
         .skill-info code {
@@ -256,6 +568,7 @@ npx clawhub install &lt;skill-name&gt;</code></pre>
             border-radius: 4px;
             font-family: 'Consolas', 'Monaco', monospace;
             font-size: 13px;
+            display: inline-block;
         }
 
         .info-box {
