@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw 文档中心</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+        }
+        h1 {
+            color: #fff;
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 20px;
+            margin-bottom: 50px;
+        }
+        .cards {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            width: 300px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: #333;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+        .card p {
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦞 OpenClaw 文档中心</h1>
+        <p class="subtitle">使用指南与学习记录</p>
+        <div class="cards">
+            <a href="guide/index.html" class="card">
+                <div class="card-icon">📖</div>
+                <h2>使用指南</h2>
+                <p>OpenClaw 入门教程、常见问题解答和最佳实践</p>
+            </a>
+            <a href="diary/index.html" class="card">
+                <div class="card-icon">📚</div>
+                <h2>学习日记</h2>
+                <p>记录 OpenClaw 使用过程中的探索、踩坑与收获</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

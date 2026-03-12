@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习日记 - OpenClaw 使用记录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 左侧导航 */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin: 4px 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .nav-link.active {
+            background: #f0f7ff;
+            color: #1890ff;
+            border-left-color: #1890ff;
+            font-weight: 500;
+        }
+
+        .nav-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* 右侧内容区 */
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 48px;
+            max-width: 900px;
+        }
+
+        .welcome-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .welcome-card h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .welcome-card p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .welcome-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 32px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 600;
+            color: #1890ff;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .container {
+                flex-direction: column;
+            }
+            .welcome-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧导航 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1>📚 学习日记</h1>
+                <p>OpenClaw 使用记录</p>
+            </div>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="2025-03-10.html" class="nav-link">
+                        2025-03-10
+                        <div class="nav-date">初次安装与探索</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2025-03-11.html" class="nav-link">
+                        2025-03-11
+                        <div class="nav-date">微信集成与飞书对接</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 右侧内容 -->
+        <main class="content">
+            <div class="welcome-card">
+                <h2>👋 欢迎来到学习日记</h2>
+                <p>记录 OpenClaw 使用过程中的探索、踩坑与收获<br>点击左侧日期查看每日详细记录</p>
+                <div class="welcome-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">记录天数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">9</div>
+                        <div class="stat-label">学习条目</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

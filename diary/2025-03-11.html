@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习日记 - OpenClaw 使用记录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 左侧导航 */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin: 4px 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .nav-link.active {
+            background: #f0f7ff;
+            color: #1890ff;
+            border-left-color: #1890ff;
+            font-weight: 500;
+        }
+
+        .nav-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* 右侧内容区 */
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 48px;
+            max-width: 900px;
+        }
+
+        .date-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .date-badge {
+            background: #1890ff;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 16px;
+        }
+
+        .date-title {
+            font-size: 24px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .entry-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+        }
+
+        .entry-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .entry-title::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background: #52c41a;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        .entry-title.issue::before {
+            background: #ff4d4f;
+        }
+
+        .entry-title.experiment::before {
+            background: #722ed1;
+        }
+
+        .entry-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .entry-content p {
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .highlight-box.success {
+            background: #f6ffed;
+            border-color: #b7eb8f;
+        }
+
+        .highlight-box.warning {
+            background: #fffbe6;
+            border-color: #ffe58f;
+        }
+
+        .highlight-box.info {
+            background: #e6f7ff;
+            border-color: #91d5ff;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .tag-success {
+            background: #f6ffed;
+            color: #52c41a;
+            border: 1px solid #b7eb8f;
+        }
+
+        .tag-issue {
+            background: #fff1f0;
+            color: #ff4d4f;
+            border: 1px solid #ffa39e;
+        }
+
+        .tag-note {
+            background: #e6f7ff;
+            color: #1890ff;
+            border: 1px solid #91d5ff;
+        }
+
+        .tags-container {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed #e8e8e8;
+        }
+
+        .screenshot {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            margin: 16px 0;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧导航 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1>📚 学习日记</h1>
+                <p>OpenClaw 使用记录</p>
+            </div>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="2025-03-10.html" class="nav-link">
+                        2025-03-10
+                        <div class="nav-date">初次安装与探索</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2025-03-11.html" class="nav-link active">
+                        2025-03-11
+                        <div class="nav-date">微信集成与飞书对接</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 右侧内容 -->
+        <main class="content">
+            <div class="date-header">
+                <span class="date-badge">第二天</span>
+                <h2 class="date-title">2025年3月11日</h2>
+            </div>
+
+            <!-- 条目1：微信集成尝试 -->
+            <article class="entry-card">
+                <h3 class="entry-title issue">微信集成：理想与现实的差距</h3>
+                <div class="entry-content">
+                    <p>尝试用 OpenClaw 调用微信，想把订单全流程管理起来。</p>
+                    
+                    <div class="highlight-box warning">
+                        <strong>问题：</strong>微信无法很好地适配 OpenClaw。
+                    </div>
+
+                    <p>可能的解决方案：寻找一个 skill，能够通过 OCR 识别的方式来操作微信。有待进一步琢磨。</p>
+
+                    <p><strong>企业微信也配置了</strong>，但在群里获取信息时需要 @机器人才能获取，这给使用上带来了限制。真实场景中有些困难。</p>
+
+                    <div class="highlight-box info">
+                        <strong>期望的能力：</strong>能够接收指定群信息和指定联系人的消息，与这些群和联系人相关的，都能自己去获取信息、自动处理然后自动给结果。
+                    </div>
+
+                    <p>腾讯在内测一个 QClaw 的项目，等开放后看能否实现这个需求。</p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-issue">微信适配</span>
+                    <span class="tag tag-note">企业微信</span>
+                    <span class="tag tag-note">OCR</span>
+                    <span class="tag tag-note">QClaw</span>
+                    <span class="tag tag-note">待解决</span>
+                </div>
+            </article>
+
+            <!-- 条目2：转向飞书多维表格 -->
+            <article class="entry-card">
+                <h3 class="entry-title">🔄 调整目标：飞书多维表格</h3>
+                <div class="entry-content">
+                    <p>微信不通，修改目标：尝试让 OpenClaw 能够帮我梳理工作。</p>
+                    
+                    <p>以小马为例，告诉龙虾生产流程和客户需求，让他帮我记录在飞书多维表格上。</p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-note">飞书</span>
+                    <span class="tag tag-note">多维表格</span>
+                    <span class="tag tag-note">工作流</span>
+                </div>
+            </article>
+
+            <!-- 条目3：本地 OpenClaw 权限问题 -->
+            <article class="entry-card">
+                <h3 class="entry-title issue">本地 OpenClaw 权限踩坑</h3>
+                <div class="entry-content">
+                    <p>使用本地的 OpenClaw 对接飞书时，一直卡在一个权限问题上。</p>
+                    
+                    <div class="highlight-box warning">
+                        <strong>问题：</strong>OpenClaw 需要的 <code>docx.document.write</code> 权限在飞书的授权页面根本没有！
+                    </div>
+
+                    <p>折腾半天，没有完全搞定。猜测难道是飞书修改了 API？</p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-issue">权限问题</span>
+                    <span class="tag tag-note">飞书 API</span>
+                    <span class="tag tag-note">本地部署</span>
+                </div>
+            </article>
+
+            <!-- 条目4：飞书集成 OpenClaw -->
+            <article class="entry-card">
+                <h3 class="entry-title">🎉 意外发现：飞书集成版 OpenClaw</h3>
+                <div class="entry-content">
+                    <p>无意中发现<strong>飞书集成了 OpenClaw</strong>，一键申请即可！</p>
+                    
+                    <div class="highlight-box success">
+                        <strong>✅ 简单配置后就可以在飞书网页版、App、客户端上使用龙虾，非常方便！</strong>
+                    </div>
+
+                    <p>用飞书上的 OpenClaw 来对接飞书多维表格，只需要弹窗授权就解决了，太好了！</p>
+
+                    <div class="highlight-box info">
+                        <strong>💡 想法：</strong>一会儿可以看看授权的记录里到底是啥，能否搬到本地电脑配置中。
+                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">飞书集成</span>
+                    <span class="tag tag-success">一键配置</span>
+                    <span class="tag tag-note">授权解决</span>
+                </div>
+            </article>
+
+            <!-- 条目5：飞书记录工作流成功 -->
+            <article class="entry-card">
+                <h3 class="entry-title">✅ 成功：飞书记录客户需求</h3>
+                <div class="entry-content">
+                    <p>配置好飞书后，终于通过和 OpenClaw 对话的方式，能够让飞书记录我的客户需求、成本、工厂等信息了！</p>
+                    
+                    <div class="highlight-box success">
+                        <strong>多维表格截图：</strong>
+                    </div>
+                    <img src="images/feishu-table-2025-03-11.png" alt="飞书订单管理多维表格" class="screenshot">
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">工作流打通</span>
+                    <span class="tag tag-success">飞书多维表格</span>
+                    <span class="tag tag-note">客户需求管理</span>
+                </div>
+            </article>
+        </main>
+    </div>
+</body>
+</html>

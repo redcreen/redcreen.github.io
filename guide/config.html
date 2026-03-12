@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw 使用指南 - 配置文件详解</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🐾</span>
+                    <span class="logo-text">OpenClaw</span>
+                </div>
+                <p class="tagline">完全指南</p>
+            </div>
+            <div class="nav-section">
+                <h3>基础概念</h3>
+                <ul><li><a href="index.html">📖 概述</a></li></ul>
+            </div>
+            <div class="nav-section">
+                <h3>核心功能</h3>
+                <ul>
+                    <li><a href="multi-agent.html">🧠 多实例架构</a></li>
+                    <li><a href="task-execution.html">⚡ 任务执行机制</a></li>
+                </ul>
+            </div>
+            <div class="nav-section">
+                <h3>配置指南</h3>
+                <ul>
+                    <li><a href="config.html" class="active">🔧 配置文件详解</a></li>
+                </ul>
+            </div>
+        </nav>
+        <main class="content">
+            <header class="page-header">
+                <h1>🔧 OpenClaw 配置文件详解</h1>
+                <p class="subtitle">全面解析 openclaw.json 的每个配置项</p>
+            </header>
+            
+            <div class="content-section">
+                <h2>配置文件位置</h2>
+                <div class="info-box">
+                    <div class="info-item"><span class="info-label">默认路径：</span><code>~/.openclaw/openclaw.json</code></div>
+                    <div class="info-item"><span class="info-label">环境变量：</span><code>OPENCLAW_CONFIG_PATH</code> - 可自定义配置文件路径</div>
+                    <div class="info-item"><span class="info-label">格式：</span><span>JSON5（支持注释、尾随逗号）</span></div>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <h2>配置结构概览</h2>
+                <div class="diagram-container">
+                    <svg viewBox="0 0 800 500" class="architecture-svg">
+                        <rect x="0" y="0" width="800" height="500" fill="#f8fafc"/>
+                        <rect x="50" y="20" width="700" height="460" rx="12" fill="#ffffff" stroke="#3b82f6" stroke-width="3"/>
+                        <text x="400" y="50" text-anchor="middle" font-size="18" font-weight="700" fill="#1e40af">openclaw.json</text>
+                        <rect x="80" y="70" width="320" height="180" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+                        <text x="240" y="95" text-anchor="middle" font-size="14" font-weight="600" fill="#1e40af">agents</text>
+                        <text x="240" y="115" text-anchor="middle" font-size="11" fill="#3b82f6">代理配置</text>
+                        <rect x="420" y="70" width="310" height="120" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+                        <text x="575" y="95" text-anchor="middle" font-size="14" font-weight="600" fill="#92400e">bindings</text>
+                        <text x="575" y="115" text-anchor="middle" font-size="11" fill="#b45309">路由绑定规则</text>
+                        <rect x="80" y="270" width="400" height="190" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+                        <text x="280" y="295" text-anchor="middle" font-size="14" font-weight="600" fill="#166534">channels</text>
+                        <text x="280" y="315" text-anchor="middle" font-size="11" fill="#22c55e">通道配置</text>
+                        <rect x="500" y="210" width="230" height="120" rx="8" fill="#f3e8ff" stroke="#a855f7" stroke-width="2"/>
+                        <text x="615" y="235" text-anchor="middle" font-size="14" font-weight="600" fill="#7c3aed">tools</text>
+                        <text x="615" y="255" text-anchor="middle" font-size="11" fill="#a855f7">工具配置</text>
+                        <rect x="500" y="350" width="230" height="110" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+                        <text x="615" y="375" text-anchor="middle" font-size="14" font-weight="600" fill="#b91c1c">gateway</text>
+                        <text x="615" y="395" text-anchor="middle" font-size="11" fill="#ef4444">网关配置</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <h2>完整配置示例</h2>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>~/.openclaw/openclaw.json</span>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    </div>
+                    <pre><code>{
+  <span class="comment">// ========== 1. 代理配置 ==========</span>
+  <span class="key">agents</span>: {
+    <span class="key">list</span>: [
+      {
+        <span class="key">id</span>: <span class="string">"main"</span>,
+        <span class="key">name</span>: <span class="string">"主助手"</span>,
+        <span class="key">default</span>: <span class="boolean">true</span>,
+        <span class="key">workspace</span>: <span class="string">"~/.openclaw/workspace"</span>,
+        <span class="key">agentDir</span>: <span class="string">"~/.openclaw/agents/main/agent"</span>,
+        <span class="key">model</span>: <span class="string">"moonshot/kimi-k2.5"</span>,
+        <span class="key">identity</span>: { <span class="key">name</span>: <span class="string">"小助手"</span>, <span class="key">emoji</span>: <span class="string">"🤖"</span> },
+        <span class="key">sandbox</span>: { <span class="key">mode</span>: <span class="string">"off"</span>, <span class="key">scope</span>: <span class="string">"agent"</span> },
+        <span class="key">tools</span>: { <span class="key">allow</span>: [<span class="string">"*"</span>], <span class="key">deny</span>: [] }
+      },
+      {
+        <span class="key">id</span>: <span class="string">"work"</span>,
+        <span class="key">name</span>: <span class="string">"工作助手"</span>,
+        <span class="key">workspace</span>: <span class="string">"~/.openclaw/workspace-work"</span>,
+        <span class="key">model</span>: <span class="string">"anthropic/claude-sonnet-4-5"</span>,
+        <span class="key">sandbox</span>: { <span class="key">mode</span>: <span class="string">"all"</span>, <span class="key">scope</span>: <span class="string">"agent"</span> },
+        <span class="key">tools</span>: { <span class="key">allow</span>: [<span class="string">"read"</span>, <span class="string">"exec"</span>], <span class="key">deny</span>: [<span class="string">"write"</span>, <span class="string">"cron"</span>] }
+      }
+    ]
+  },
+  
+  <span class="comment">// ========== 2. 路由绑定配置 ==========</span>
+  <span class="key">bindings</span>: [
+    { <span class="key">agentId</span>: <span class="string">"main"</span>, <span class="key">match</span>: { <span class="key">channel</span>: <span class="string">"whatsapp"</span>, <span class="key">accountId</span>: <span class="string">"personal"</span> } },
+    { <span class="key">agentId</span>: <span class="string">"work"</span>, <span class="key">match</span>: { <span class="key">channel</span>: <span class="string">"whatsapp"</span>, <span class="key">accountId</span>: <span class="string">"work"</span> } }
+  ],
+  
+  <span class="comment">// ========== 3. 通道配置 ==========</span>
+  <span class="key">channels</span>: {
+    <span class="key">whatsapp</span>: {
+      <span class="key">defaultAccount</span>: <span class="string">"personal"</span>,
+      <span class="key">dmPolicy</span>: <span class="string">"pairing"</span>,
+      <span class="key">groupPolicy</span>: <span class="string">"allowlist"</span>,
+      <span class="key">accounts</span>: {
+        <span class="key">personal</span>: { <span class="key">authDir</span>: <span class="string">"~/.openclaw/credentials/whatsapp/personal"</span> },
+        <span class="key">work</span>: { <span class="key">authDir</span>: <span class="string">"~/.openclaw/credentials/whatsapp/work"</span> }
+      }
+    },
+    <span class="key">telegram</span>: {
+      <span class="key">accounts</span>: {
+        <span class="key">default</span>: { <span class="key">botToken</span>: <span class="string">"${TELEGRAM_BOT_TOKEN}"</span>, <span class="key">dmPolicy</span>: <span class="string">"pairing"</span> }
+      }
+    },
+    <span class="key">discord</span>: {
+      <span class="key">accounts</span>: {
+        <span class="key">default</span>: { <span class="key">token</span>: <span class="string">"${DISCORD_BOT_TOKEN}"</span> }
+      }
+    }
+  },
+  
+  <span class="comment">// ========== 4. 工具配置 ==========</span>
+  <span class="key">tools</span>: {
+    <span class="key">agentToAgent</span>: { <span class="key">enabled</span>: <span class="boolean">false</span>, <span class="key">allow</span>: [<span class="string">"main"</span>, <span class="string">"work"</span>] },
+    <span class="key">elevated</span>: { <span class="key">exec</span>: <span class="boolean">true</span>, <span class="key">write</span>: <span class="boolean">false</span> }
+  },
+  
+  <span class="comment">// ========== 5. 网关配置 ==========</span>
+  <span class="key">gateway</span>: {
+    <span class="key">host</span>: <span class="string">"127.0.0.1"</span>,
+    <span class="key">port</span>: <span class="number">18789</span>,
+    <span class="key">token</span>: <span class="string">"${OPENCLAW_GATEWAY_TOKEN}"</span>
+  }
+}</code></pre>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <h2>核心配置项详解</h2>
+                
+                <div class="config-section">
+                    <h3>agents（代理配置）</h3>
+                    <table class="config-table">
+                        <thead><tr><th>配置项</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>id</code></td><td>string</td><td>✓</td><td>代理唯一标识</td></tr>
+                            <tr><td><code>name</code></td><td>string</td><td>✗</td><td>显示名称</td></tr>
+                            <tr><td><code>default</code></td><td>boolean</td><td>✗</td><td>是否为默认代理</td></tr>
+                            <tr><td><code>workspace</code></td><td>string</td><td>✗</td><td>工作区路径</td></tr>
+                            <tr><td><code>agentDir</code></td><td>string</td><td>✗</td><td>代理状态目录</td></tr>
+                            <tr><td><code>model</code></td><td>string</td><td>✗</td><td>默认AI模型</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>sandbox（沙盒配置）</h4>
+                    <table class="config-table">
+                        <thead><tr><th>配置项</th><th>可选值</th><th>说明</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>mode</code></td><td>off / all / ask</td><td>沙盒模式</td></tr>
+                            <tr><td><code>scope</code></td><td>agent / shared</td><td>沙盒范围</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>tools（工具权限）</h4>
+                    <table class="config-table">
+                        <thead><tr><th>配置项</th><th>说明</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>allow</code></td><td>允许的工具列表，["*"]表示全部</td></tr>
+                            <tr><td><code>deny</code></td><td>禁用的工具列表</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="config-section">
+                    <h3>bindings（路由绑定）</h3>
+                    <table class="config-table">
+                        <thead><tr><th>配置项</th><th>类型</th><th>说明</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>agentId</code></td><td>string</td><td>目标代理ID</td></tr>
+                            <tr><td><code>match.channel</code></td><td>string</td><td>通道类型(whatsapp/telegram/discord等)</td></tr>
+                            <tr><td><code>match.accountId</code></td><td>string</td><td>账号ID，"*"匹配所有</td></tr>
+                            <tr><td><code>match.peer.kind</code></td><td>string</td><td>direct/group</td></tr>
+                            <tr><td><code>match.peer.id</code></td><td>string</td><td>具体ID(手机号/群ID)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="config-section">
+                    <h3>channels（通道配置）</h3>
+                    <table class="config-table">
+                        <thead><tr><th>配置项</th><th>可选值</th><th>说明</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>dmPolicy</code></td><td>pairing/allowlist/all</td><td>私信策略</td></tr>
+                            <tr><td><code>groupPolicy</code></td><td>allowlist/all/none</td><td>群聊策略</td></tr>
+                            <tr><td><code>allowFrom</code></td><td>array</td><td>允许列表</td></tr>
+                            <tr><td><code>defaultAccount</code></td><td>string</td><td>默认账号</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="config-section">
+                    <h3>gateway（网关配置）</h3>
+                    <table class="config-table">
+                        <thead><tr><th>配置项</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>host</code></td><td>string</td><td>127.0.0.1</td><td>绑定地址</td></tr>
+                            <tr><td><code>port</code></td><td>number</td><td>18789</td><td>绑定端口</td></tr>
+                            <tr><td><code>token</code></td><td>string</td><td>-</td><td>访问令牌(可选)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <h2>常用配置模板</h2>
+                
+                <div class="template-card">
+                    <h4>模板1：单用户基础配置</h4>
+                    <div class="code-block">
+                        <pre><code>{
+  <span class="key">agents</span>: {
+    <span class="key">list</span>: [{ <span class="key">id</span>: <span class="string">"main"</span>, <span class="key">default</span>: <span class="boolean">true</span> }]
+  },
+  <span class="key">channels</span>: {
+    <span class="key">webchat</span>: { <span class="key">enabled</span>: <span class="boolean">true</span> }
+  }
+}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="template-card">
+                    <h4>模板2：工作/生活分离</h4>
+                    <div class="code-block">
+                        <pre><code>{
+  <span class="key">agents</span>: {
+    <span class="key">list</span>: [
+      { <span class="key">id</span>: <span class="string">"personal"</span>, <span class="key">name</span>: <span class="string">"个人"</span>, <span class="key">default</span>: <span class="boolean">true</span> },
+      { <span class="key">id</span>: <span class="string">"work"</span>, <span class="key">name</span>: <span class="string">"工作"</span>, <span class="key">sandbox</span>: { <span class="key">mode</span>: <span class="string">"all"</span> } }
+    ]
+  },
+  <span class="key">bindings</span>: [
+    { <span class="key">agentId</span>: <span class="string">"personal"</span>, <span class="key">match</span>: { <span class="key">channel</span>: <span class="string">"whatsapp"</span>, <span class="key">accountId</span>: <span class="string">"personal"</span> } },
+    { <span class="key">agentId</span>: <span class="string">"work"</span>, <span class="key">match</span>: { <span class="key">channel</span>: <span class="string">"whatsapp"</span>, <span class="key">accountId</span>: <span class="string">"work"</span> } }
+  ]
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="page-footer">
+                <p>本指南由 OpenClaw 社区维护 | 最后更新：2026-03-11</p>
+            </footer>
+        </main>
+    </div>
+    <script>
+        function copyCode(btn) {
+            const code = btn.parentElement.nextElementSibling.textContent;
+            navigator.clipboard.writeText(code);
+            btn.textContent = '已复制!';
+            setTimeout(() => btn.textContent = '复制', 2000);
+        }
+    </script>
+</body>
+</html>
