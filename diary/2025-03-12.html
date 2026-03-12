@@ -249,8 +249,10 @@
         <!-- 左侧导航 -->
         <nav class="sidebar">
             <div class="sidebar-header">
-                <h1>📚 学习日记</h1>
-                <p>OpenClaw 使用记录</p>
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h1>📚 学习日记</h1>
+                    <p>OpenClaw 使用记录</p>
+                </a>
             </div>
             <ul class="nav-list">
                 <li class="nav-item">
@@ -339,7 +341,47 @@
                 </div>
             </article>
 
-            <!-- 条目3：经验总结 -->
+            <!-- 条目3：自动生成学习日记 -->
+            <article class="entry-card">
+                <h3 class="entry-title experiment">🧪 新功能：自动生成学习日记</h3>
+                <div class="entry-content">
+                    <p>今天提出了一个自动化需求：让我每天记录对话内容，自动分析生成学习日记。</p>
+                    
+                    <div class="highlight-box info">
+                        <strong>需求：</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>自动记录每日对话及解决方案</li>
+                            <li>从对话中提取有价值的信息</li>
+                            <li>自动生成学习日记内容</li>
+                            <li>减少手动整理工作量</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>设计方案：</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li>创建 <code>daily-logs/</code> 目录，轻量级记录（省 token）</li>
+                        <li>记录格式：时间、主题、用户要点、我的思考、关键结论</li>
+                        <li>支持三种触发方式：
+                            <ul style="margin-left: 20px; margin-top: 4px;">
+                                <li>A: 每天晚上自动分析生成</li>
+                                <li>B: 用户随时说"生成本日学习日记"</li>
+                                <li>C: 积累到一定量后生成</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <div class="highlight-box success">
+                        <strong>✅ 已实现：</strong>创建了 daily-logs 记录系统，并成功生成了今天的学习日记！
+                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">自动化</span>
+                    <span class="tag tag-note">工作流优化</span>
+                    <span class="tag tag-note">daily-logs</span>
+                </div>
+            </article>
+
+            <!-- 条目4：经验总结 -->
             <article class="entry-card">
                 <h3 class="entry-title">📝 今日经验</h3>
                 <div class="entry-content">
