@@ -406,7 +406,42 @@
                 </div>
             </article>
 
-            <!-- 条目5：经验总结 -->
+            <!-- 条目5：截图方案解决 -->
+            <article class="entry-card">
+                <h3 class="entry-title">🎯 截图方案最终解决</h3>
+                <div class="entry-content">
+                    <p>今天经过多次尝试，最终解决了浏览器截图的问题。</p>
+                    
+                    <div class="highlight-box warning">
+                        <strong>尝试过的方案：</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>agent-browser skill - 安装成功但命令找不到</li>
+                            <li>Playwright 自动下载 Chromium - 网络下载失败</li>
+                            <li>Puppeteer - 需要额外安装</li>
+                            <li>Python selenium - 未安装</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box success">
+                        <strong>✅ 最终方案：Edge + Playwright</strong><br>
+                        使用系统自带的 Edge 浏览器，通过 Playwright 调用，无需额外下载浏览器。
+                        <pre style="margin-top: 8px; background: #f5f5f5; padding: 8px; border-radius: 4px;"><code>const { chromium } = require('playwright');
+const browser = await chromium.launch({ 
+  executablePath: 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+  headless: true 
+});</code></pre>
+                    </div>
+
+                    <p><strong>成果：</strong>成功截图 clawhub.ai/skills，提取了 Top 10 Skills 并更新到使用指南页面。</p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">问题解决</span>
+                    <span class="tag tag-note">浏览器自动化</span>
+                    <span class="tag tag-note">Playwright</span>
+                </div>
+            </article>
+
+            <!-- 条目6：今日经验 -->
             <article class="entry-card">
                 <h3 class="entry-title">📝 今日经验</h3>
                 <div class="entry-content">
