@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025-03-12 - 学习日记</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 左侧导航 */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin: 4px 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .nav-link.active {
+            background: #f0f7ff;
+            color: #1890ff;
+            border-left-color: #1890ff;
+            font-weight: 500;
+        }
+
+        .nav-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* 右侧内容区 */
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 48px;
+            max-width: 900px;
+        }
+
+        .date-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .date-badge {
+            background: #1890ff;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 16px;
+        }
+
+        .date-title {
+            font-size: 24px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .entry-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+        }
+
+        .entry-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .entry-title::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background: #52c41a;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        .entry-title.issue::before {
+            background: #ff4d4f;
+        }
+
+        .entry-title.experiment::before {
+            background: #722ed1;
+        }
+
+        .entry-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .entry-content p {
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .highlight-box.success {
+            background: #f6ffed;
+            border-color: #b7eb8f;
+        }
+
+        .highlight-box.warning {
+            background: #fffbe6;
+            border-color: #ffe58f;
+        }
+
+        .highlight-box.info {
+            background: #e6f7ff;
+            border-color: #91d5ff;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .tag-success {
+            background: #f6ffed;
+            color: #52c41a;
+            border: 1px solid #b7eb8f;
+        }
+
+        .tag-issue {
+            background: #fff1f0;
+            color: #ff4d4f;
+            border: 1px solid #ffa39e;
+        }
+
+        .tag-note {
+            background: #e6f7ff;
+            color: #1890ff;
+            border: 1px solid #91d5ff;
+        }
+
+        .tags-container {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed #e8e8e8;
+        }
+
+        .screenshot {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            margin: 16px 0;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧导航 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1>📚 学习日记</h1>
+                <p>OpenClaw 使用记录</p>
+            </div>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="2025-03-10.html" class="nav-link">
+                        2025-03-10
+                        <div class="nav-date">初次安装与探索</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2025-03-11.html" class="nav-link">
+                        2025-03-11
+                        <div class="nav-date">微信集成与飞书对接</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2025-03-12.html" class="nav-link active">
+                        2025-03-12
+                        <div class="nav-date">GitHub Pages 部署</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 右侧内容 -->
+        <main class="content">
+            <div class="date-header">
+                <span class="date-badge">第三天</span>
+                <h2 class="date-title">2025年3月12日</h2>
+            </div>
+
+            <!-- 条目1：GitHub Pages 部署成功 -->
+            <article class="entry-card">
+                <h3 class="entry-title">🎉 成功：学习日记和使用指南上线</h3>
+                <div class="entry-content">
+                    <p>今天成功将 OpenClaw 使用指南和学习日记部署到 GitHub Pages，现在可以通过 HTTP 访问了！</p>
+                    
+                    <div class="highlight-box success">
+                        <strong>🌐 网站地址：</strong><br>
+                        <a href="https://redcreen.github.io" target="_blank" style="color: #1890ff;">https://redcreen.github.io</a><br><br>
+                        <strong>包含内容：</strong><br>
+                        📖 <a href="https://redcreen.github.io/guide/" target="_blank" style="color: #1890ff;">使用指南</a><br>
+                        📚 <a href="https://redcreen.github.io/diary/" target="_blank" style="color: #1890ff;">学习日记</a>
+                    </div>
+
+                    <p><strong>部署过程：</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li>创建 GitHub 仓库 <code>redcreen.github.io</code></li>
+                        <li>配置 Git 使用 Personal Access Token 认证</li>
+                        <li>推送代码到 main 分支</li>
+                        <li>启用 GitHub Pages 自动部署</li>
+                    </ul>
+
+                    <div class="highlight-box info">
+                        <strong>💡 经验总结：</strong><br>
+                        当 OpenClaw 说搞不定时，明确告诉它你要什么，它会一步步尝试重做，最终能做好。今天部署过程中遇到了多个问题（GitHub CLI 安装失败、认证问题、仓库创建等），通过明确需求和多次尝试，最终都解决了。
+                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">部署成功</span>
+                    <span class="tag tag-success">GitHub Pages</span>
+                    <span class="tag tag-note">自动化</span>
+                </div>
+            </article>
+
+            <!-- 条目2：安装 self-improving-agent -->
+            <article class="entry-card">
+                <h3 class="entry-title experiment">🧪 新技能：self-improving-agent</h3>
+                <div class="entry-content">
+                    <p>今天安装了 <code>self-improving-agent</code> skill，这是一个号称可以自动记录失败和成功经验的工具。</p>
+
+                    <div class="highlight-box info">
+                        <strong>功能：</strong>像写学习笔记一样，自动记录错误、用户纠正、最佳实践等
+                    </div>
+
+                    <p><strong>已记录的内容：</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li>图片保存问题（无法从聊天消息提取图片保存为文件）</li>
+                    </ul>
+
+                    <p>后续会分享使用体验，看看这个"自动学习笔记"效果如何。</p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-note">新技能</span>
+                    <span class="tag tag-note">self-improving-agent</span>
+                    <span class="tag tag-note">待体验</span>
+                </div>
+            </article>
+
+            <!-- 条目3：经验总结 -->
+            <article class="entry-card">
+                <h3 class="entry-title">📝 今日经验</h3>
+                <div class="entry-content">
+                    <p><strong>与 OpenClaw 协作的技巧：</strong></p>
+                    
+                    <div class="highlight-box success">
+                        当 OpenClaw 说"搞不定"时，不要放弃，明确告诉它你的最终目标，它会一步步尝试不同的方案，最终通常能解决问题。
+                    </div>
+
+                    <p>今天的部署过程就是很好的例子：</p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li>GitHub CLI 安装失败 → 换用 Git 命令</li>
+                        <li>Git 需要交互式认证 → 使用 Personal Access Token</li>
+                        <li>仓库不存在 → 用 API 创建</li>
+                        <li>推送冲突 → 先拉取再推送</li>
+                    </ul>
+
+                    <p>每个问题都通过明确需求和多次尝试解决了。</p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">最佳实践</span>
+                    <span class="tag tag-note">协作技巧</span>
+                </div>
+            </article>
+        </main>
+    </div>
+</body>
+</html>
