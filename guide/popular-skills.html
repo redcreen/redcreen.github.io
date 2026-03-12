@@ -5,157 +5,172 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>最受欢迎的 Skills - OpenClaw 使用指南</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
+        <!-- 左侧导航栏 -->
         <nav class="sidebar">
             <div class="sidebar-header">
-                <a href="index.html" style="text-decoration: none; color: inherit;">
-                    <h2>🦞 OpenClaw</h2>
-                    <p>使用指南</p>
-                </a>
+                <div class="logo">
+                    <span class="logo-icon">🐾</span>
+                    <span class="logo-text">OpenClaw</span>
+                </div>
+                <p class="tagline">完全指南</p>
             </div>
-            <ul class="nav-list">
-                <li class="nav-item">
-                    <a href="index.html" class="nav-link">首页</a>
-                </li>
-                <li class="nav-item">
-                    <a href="config.html" class="nav-link">配置指南</a>
-                </li>
-                <li class="nav-item">
-                    <a href="multi-agent.html" class="nav-link">多 Agent 协作</a>
-                </li>
-                <li class="nav-item">
-                    <a href="task-execution.html" class="nav-link">任务执行</a>
-                </li>
-                <li class="nav-item">
-                    <a href="popular-skills.html" class="nav-link active">⭐ 最受欢迎的 Skills</a>
-                </li>
-            </ul>
+            
+            <div class="nav-section">
+                <h3>基础概念</h3>
+                <ul>
+                    <li><a href="index.html">📖 概述</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>核心功能</h3>
+                <ul>
+                    <li><a href="multi-agent.html">🧠 多实例架构</a></li>
+                    <li><a href="task-execution.html">⚡ 任务执行机制</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>配置指南</h3>
+                <ul>
+                    <li><a href="config.html">🔧 配置文件详解</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>资源推荐</h3>
+                <ul>
+                    <li><a href="popular-skills.html" class="active">⭐ 最受欢迎的 Skills</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-footer">
+                <p>持续更新中...</p>
+            </div>
         </nav>
 
+        <!-- 主内容区 -->
         <main class="content">
-            <h1>⭐ 最受欢迎的 Skills</h1>
-            <p class="subtitle">ClawHub 上热门的 Skills，按搜索热度排序</p>
+            <header class="page-header">
+                <h1>⭐ 最受欢迎的 Skills</h1>
+                <p class="subtitle">ClawHub 官方推荐的热门 Skills</p>
+            </header>
 
-            <div class="skills-grid">
+            <div class="content-section">
+                <p>以下是 <a href="https://clawhub.ai/skills" target="_blank">clawhub.ai/skills</a> 上的热门 Skills，按官方排序：</p>
+            </div>
+
+            <div class="skills-list">
                 <!-- Skill 1 -->
-                <div class="skill-card featured">
-                    <div class="skill-header">
-                        <h3>🐙 Github</h3>
-                        <span class="hot">🔥 热门</span>
-                    </div>
-                    <p class="skill-desc">GitHub 操作集成，支持仓库管理、Issue 处理、PR 管理等完整 GitHub 工作流。</p>
-                    <div class="skill-meta">
-                        <span class="install">npx clawhub install github</span>
+                <div class="skill-item featured">
+                    <div class="skill-rank">1</div>
+                    <div class="skill-info">
+                        <h3>🌤️ weather</h3>
+                        <p>获取当前天气和天气预报，支持全球任意地点，无需 API Key。</p>
+                        <code>npx clawhub install weather</code>
                     </div>
                 </div>
 
                 <!-- Skill 2 -->
-                <div class="skill-card featured">
-                    <div class="skill-header">
-                        <h3>🚀 Vercel Deploy</h3>
-                        <span class="hot">🔥 热门</span>
-                    </div>
-                    <p class="skill-desc">一键部署到 Vercel，支持静态网站、Next.js、React 等框架的自动部署。</p>
-                    <div class="skill-meta">
-                        <span class="install">npx clawhub install vercel-deploy</span>
+                <div class="skill-item featured">
+                    <div class="skill-rank">2</div>
+                    <div class="skill-info">
+                        <h3>📝 skill-creator</h3>
+                        <p>创建、编辑、改进或审计 Agent Skills，支持 SKILL.md 规范验证。</p>
+                        <code>npx clawhub install skill-creator</code>
                     </div>
                 </div>
 
                 <!-- Skill 3 -->
-                <div class="skill-card featured">
-                    <div class="skill-header">
-                        <h3>🌐 Web Deploy GitHub Pages</h3>
-                        <span class="hot">🔥 热门</span>
-                    </div>
-                    <p class="skill-desc">自动部署到 GitHub Pages，适合静态网站、文档站点的托管。</p>
-                    <div class="skill-meta">
-                        <span class="install">npx clawhub install web-deploy-github</span>
+                <div class="skill-item featured">
+                    <div class="skill-rank">3</div>
+                    <div class="skill-info">
+                        <h3>🔐 healthcheck</h3>
+                        <p>主机安全加固和风险评估，支持防火墙、SSH、更新检查等。</p>
+                        <code>npx clawhub install healthcheck</code>
                     </div>
                 </div>
 
                 <!-- Skill 4 -->
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <h3>🤖 OpenClaw GitHub Assistant</h3>
-                    </div>
-                    <p class="skill-desc">OpenClaw 专用的 GitHub 助手，提供更深入的 GitHub 集成功能。</p>
-                    <div class="skill-meta">
-                        <span class="install">npx clawhub install openclaw-github-assistant</span>
+                <div class="skill-item">
+                    <div class="skill-rank">4</div>
+                    <div class="skill-info">
+                        <h3>🐙 github</h3>
+                        <p>GitHub 操作集成，支持仓库管理、Issue 处理、PR 管理等。</p>
+                        <code>npx clawhub install github</code>
                     </div>
                 </div>
 
                 <!-- Skill 5 -->
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <h3>📊 Kanban</h3>
-                    </div>
-                    <p class="skill-desc">构建多项目看板系统，支持任务管理、进度追踪和团队协作。</p>
-                    <div class="skill-meta">
-                        <span class="install">npx clawhub install kanban</span>
+                <div class="skill-item">
+                    <div class="skill-rank">5</div>
+                    <div class="skill-info">
+                        <h3>🚀 vercel-deploy</h3>
+                        <p>一键部署到 Vercel，支持静态网站、Next.js、React 等框架。</p>
+                        <code>npx clawhub install vercel-deploy</code>
                     </div>
                 </div>
 
                 <!-- Skill 6 -->
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <h3>🔍 GitHub Search</h3>
-                    </div>
-                    <p class="skill-desc">强大的 GitHub 搜索功能，快速查找仓库、代码、Issue 和 PR。</p>
-                    <div class="skill-meta">
-                        <span class="install">npx clawhub install github-search</span>
+                <div class="skill-item">
+                    <div class="skill-rank">6</div>
+                    <div class="skill-info">
+                        <h3>🌐 web-deploy-github</h3>
+                        <p>自动部署到 GitHub Pages，适合静态网站和文档站点。</p>
+                        <code>npx clawhub install web-deploy-github</code>
                     </div>
                 </div>
 
                 <!-- Skill 7 -->
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <h3>🎫 GitHub Issue Resolver</h3>
-                    </div>
-                    <p class="skill-desc">自动分析和解决 GitHub Issue，提供修复建议和代码实现。</p>
-                    <div class="skill-meta">
-                        <span class="install">npx clawhub install github-issue-resolver</span>
+                <div class="skill-item">
+                    <div class="skill-rank">7</div>
+                    <div class="skill-info">
+                        <h3>📊 kanban</h3>
+                        <p>构建多项目看板系统，支持任务管理和进度追踪。</p>
+                        <code>npx clawhub install kanban</code>
                     </div>
                 </div>
 
                 <!-- Skill 8 -->
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <h3>⚡ GitHub Actions Generator</h3>
-                    </div>
-                    <p class="skill-desc">自动生成 GitHub Actions 工作流，支持 CI/CD、测试、部署等场景。</p>
-                    <div class="skill-meta">
-                        <span class="install">npx clawhub install github-actions-generator</span>
+                <div class="skill-item">
+                    <div class="skill-rank">8</div>
+                    <div class="skill-info">
+                        <h3>🔍 github-search</h3>
+                        <p>强大的 GitHub 搜索功能，快速查找仓库、代码、Issue。</p>
+                        <code>npx clawhub install github-search</code>
                     </div>
                 </div>
 
                 <!-- Skill 9 -->
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <h3>🚀 Railway Deploy</h3>
-                    </div>
-                    <p class="skill-desc">一键部署到 Railway 平台，支持多种语言和框架的云部署。</p>
-                    <div class="skill-meta">
-                        <span class="install">npx clawhub install railway-deploy</span>
+                <div class="skill-item">
+                    <div class="skill-rank">9</div>
+                    <div class="skill-info">
+                        <h3>🎫 github-issue-resolver</h3>
+                        <p>自动分析和解决 GitHub Issue，提供修复建议。</p>
+                        <code>npx clawhub install github-issue-resolver</code>
                     </div>
                 </div>
 
                 <!-- Skill 10 -->
-                <div class="skill-card">
-                    <div class="skill-header">
-                        <h3>🔴 Red Team</h3>
-                    </div>
-                    <p class="skill-desc">对抗性多 Agent 辩论引擎，用于压力测试和方案验证。</p>
-                    <div class="skill-meta">
-                        <span class="install">npx clawhub install red-team</span>
+                <div class="skill-item">
+                    <div class="skill-rank">10</div>
+                    <div class="skill-info">
+                        <h3>⚡ github-actions-generator</h3>
+                        <p>自动生成 GitHub Actions 工作流，支持 CI/CD 场景。</p>
+                        <code>npx clawhub install github-actions-generator</code>
                     </div>
                 </div>
             </div>
 
-            <div class="info-box">
-                <h3>📌 如何安装这些 Skills</h3>
-                <p>使用 ClawHub 安装：</p>
+            <div class="content-section info-box">
+                <h3>📌 如何安装 Skills</h3>
+                <p>使用 ClawHub CLI 安装：</p>
                 <pre><code># 搜索 skills
 npx clawhub search &lt;关键词&gt;
 
@@ -163,92 +178,85 @@ npx clawhub search &lt;关键词&gt;
 npx clawhub install &lt;skill-name&gt;</code></pre>
             </div>
 
-            <div class="tip-box">
+            <div class="content-section tip-box">
                 <h3>💡 提示</h3>
-                <p>ClawHub 上的 skills 会不断更新，建议定期访问 <a href="https://clawhub.com" target="_blank">clawhub.com</a> 发现更多实用 skills。</p>
+                <p>访问 <a href="https://clawhub.ai/skills" target="_blank">clawhub.ai/skills</a> 发现更多实用 skills，目前共有 50+ 个 skills 可供选择。</p>
             </div>
         </main>
     </div>
 
     <style>
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
+        .skills-list {
             margin: 30px 0;
         }
 
-        .skill-card {
+        .skill-item {
+            display: flex;
+            align-items: flex-start;
             background: #fff;
             border-radius: 12px;
             padding: 24px;
+            margin-bottom: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             border: 1px solid #f0f0f0;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .skill-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        .skill-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
         }
 
-        .skill-card.featured {
-            border: 2px solid #1890ff;
-            background: linear-gradient(135deg, #f0f7ff 0%, #fff 100%);
+        .skill-item.featured {
+            border-left: 4px solid #1890ff;
+            background: linear-gradient(90deg, #f0f7ff 0%, #fff 100%);
         }
 
-        .skill-header {
+        .skill-rank {
+            width: 40px;
+            height: 40px;
+            background: #1890ff;
+            color: #fff;
+            border-radius: 50%;
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            margin-right: 20px;
+            flex-shrink: 0;
         }
 
-        .skill-header h3 {
-            font-size: 18px;
-            color: #333;
-            margin: 0;
+        .skill-info {
             flex: 1;
         }
 
-        .hot {
-            background: #fff1f0;
-            color: #ff4d4f;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-            margin-left: 10px;
+        .skill-info h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 8px;
         }
 
-        .skill-desc {
+        .skill-info p {
             color: #666;
             line-height: 1.6;
-            margin-bottom: 16px;
-            font-size: 14px;
+            margin-bottom: 12px;
         }
 
-        .skill-meta {
-            padding-top: 12px;
-            border-top: 1px dashed #e8e8e8;
-        }
-
-        .install {
+        .skill-info code {
             background: #f6ffed;
             color: #52c41a;
             padding: 6px 12px;
             border-radius: 4px;
             font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 12px;
-            display: inline-block;
+            font-size: 13px;
         }
 
         .info-box {
             background: #e6f7ff;
             border: 1px solid #91d5ff;
             border-radius: 8px;
-            padding: 20px;
+            padding: 24px;
             margin: 30px 0;
         }
 
@@ -261,7 +269,7 @@ npx clawhub install &lt;skill-name&gt;</code></pre>
             background: #f6ffed;
             border: 1px solid #b7eb8f;
             border-radius: 8px;
-            padding: 20px;
+            padding: 24px;
             margin: 20px 0;
         }
 
@@ -275,6 +283,7 @@ npx clawhub install &lt;skill-name&gt;</code></pre>
             padding: 16px;
             border-radius: 6px;
             overflow-x: auto;
+            margin-top: 12px;
         }
 
         code {
