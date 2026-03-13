@@ -1,0 +1,659 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026-03-12 - 瀛︿範鏃ヨ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 宸︿晶瀵艰埅 */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin: 4px 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .nav-link.active {
+            background: #f0f7ff;
+            color: #1890ff;
+            border-left-color: #1890ff;
+            font-weight: 500;
+        }
+
+        .nav-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* 鍙充晶鍐呭鍖?*/
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 48px;
+            max-width: 900px;
+        }
+
+        .date-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .date-badge {
+            background: #1890ff;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 16px;
+        }
+
+        .date-title {
+            font-size: 24px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .entry-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+        }
+
+        .entry-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .entry-title::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background: #52c41a;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        .entry-title.issue::before {
+            background: #ff4d4f;
+        }
+
+        .entry-title.experiment::before {
+            background: #722ed1;
+        }
+
+        .entry-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .entry-content p {
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .highlight-box.success {
+            background: #f6ffed;
+            border-color: #b7eb8f;
+        }
+
+        .highlight-box.warning {
+            background: #fffbe6;
+            border-color: #ffe58f;
+        }
+
+        .highlight-box.info {
+            background: #e6f7ff;
+            border-color: #91d5ff;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .tag-success {
+            background: #f6ffed;
+            color: #52c41a;
+            border: 1px solid #b7eb8f;
+        }
+
+        .tag-issue {
+            background: #fff1f0;
+            color: #ff4d4f;
+            border: 1px solid #ffa39e;
+        }
+
+        .tag-note {
+            background: #e6f7ff;
+            color: #1890ff;
+            border: 1px solid #91d5ff;
+        }
+
+        .tags-container {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed #e8e8e8;
+        }
+
+        .screenshot {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            margin: 16px 0;
+        }
+
+        /* 鍝嶅簲寮?*/
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 宸︿晶瀵艰埅 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1>馃摎 瀛︿範鏃ヨ</h1>
+                <p>OpenClaw 浣跨敤璁板綍</p>
+            </div>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="2025-03-10.html" class="nav-link">
+                        2025-03-10
+                        <div class="nav-date">鍒濇瀹夎涓庢帰绱?/div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2025-03-11.html" class="nav-link">
+                        2025-03-11
+                        <div class="nav-date">寰俊闆嗘垚涓庨涔﹀鎺?/div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-12.html" class="nav-link active">
+                        2026-03-12
+                        <div class="nav-date">GitHub Pages 閮ㄧ讲</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-13.html" class="nav-link">
+                        2026-03-13
+                        <div class="nav-date">璁板繂绯荤粺鎶樿吘</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 鍙充晶鍐呭 -->
+        <main class="content">
+            <div class="date-header">
+                <span class="date-badge">绗笁澶?/span>
+                <h2 class="date-title">2025骞?鏈?2鏃?/h2>
+            </div>
+
+            <!-- 鏉＄洰1锛欸itHub Pages 閮ㄧ讲鎴愬姛 -->
+            <article class="entry-card">
+                <h3 class="entry-title">馃帀 鎴愬姛锛氬涔犳棩璁板拰浣跨敤鎸囧崡涓婄嚎</h3>
+                <div class="entry-content">
+                    <p>浠婂ぉ鎴愬姛灏?OpenClaw 浣跨敤鎸囧崡鍜屽涔犳棩璁伴儴缃插埌 GitHub Pages锛岀幇鍦ㄥ彲浠ラ€氳繃 HTTP 璁块棶浜嗭紒</p>
+                    
+                    <div class="highlight-box success">
+                        <strong>馃寪 缃戠珯鍦板潃锛?/strong><br>
+                        <a href="https://redcreen.github.io" target="_blank" style="color: #1890ff;">https://redcreen.github.io</a><br><br>
+                        <strong>鍖呭惈鍐呭锛?/strong><br>
+                        馃摉 <a href="https://redcreen.github.io/guide/" target="_blank" style="color: #1890ff;">浣跨敤鎸囧崡</a><br>
+                        馃摎 <a href="https://redcreen.github.io/diary/" target="_blank" style="color: #1890ff;">瀛︿範鏃ヨ</a>
+                    </div>
+
+                    <p><strong>閮ㄧ讲杩囩▼锛?/strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li>鍒涘缓 GitHub 浠撳簱 <code>redcreen.github.io</code></li>
+                        <li>閰嶇疆 Git 浣跨敤 Personal Access Token 璁よ瘉</li>
+                        <li>鎺ㄩ€佷唬鐮佸埌 main 鍒嗘敮</li>
+                        <li>鍚敤 GitHub Pages 鑷姩閮ㄧ讲</li>
+                    </ul>
+
+                    <div class="highlight-box info">
+                        <strong>馃挕 缁忛獙鎬荤粨锛?/strong><br>
+                        褰?OpenClaw 璇存悶涓嶅畾鏃讹紝鏄庣‘鍛婅瘔瀹冧綘瑕佷粈涔堬紝瀹冧細涓€姝ユ灏濊瘯閲嶅仛锛屾渶缁堣兘鍋氬ソ銆備粖澶╅儴缃茶繃绋嬩腑閬囧埌浜嗗涓棶棰橈紙GitHub CLI 瀹夎澶辫触銆佽璇侀棶棰樸€佷粨搴撳垱寤虹瓑锛夛紝閫氳繃鏄庣‘闇€姹傚拰澶氭灏濊瘯锛屾渶缁堥兘瑙ｅ喅浜嗐€?                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">閮ㄧ讲鎴愬姛</span>
+                    <span class="tag tag-success">GitHub Pages</span>
+                    <span class="tag tag-note">鑷姩鍖?/span>
+                </div>
+            </article>
+
+            <!-- 鏉＄洰2锛氬畨瑁?self-improving-agent -->
+            <article class="entry-card">
+                <h3 class="entry-title experiment">馃И 鏂版妧鑳斤細self-improving-agent</h3>
+                <div class="entry-content">
+                    <p>浠婂ぉ瀹夎浜?<code>self-improving-agent</code> skill锛岃繖鏄竴涓彿绉板彲浠ヨ嚜鍔ㄨ褰曞け璐ュ拰鎴愬姛缁忛獙鐨勫伐鍏枫€?/p>
+
+                    <div class="highlight-box info">
+                        <strong>鍔熻兘锛?/strong>鍍忓啓瀛︿範绗旇涓€鏍凤紝鑷姩璁板綍閿欒銆佺敤鎴风籂姝ｃ€佹渶浣冲疄璺电瓑
+                    </div>
+
+                    <p><strong>宸茶褰曠殑鍐呭锛?/strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li>鍥剧墖淇濆瓨闂锛堟棤娉曚粠鑱婂ぉ娑堟伅鎻愬彇鍥剧墖淇濆瓨涓烘枃浠讹級</li>
+                    </ul>
+
+                    <p>鍚庣画浼氬垎浜娇鐢ㄤ綋楠岋紝鐪嬬湅杩欎釜"鑷姩瀛︿範绗旇"鏁堟灉濡備綍銆?/p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-note">鏂版妧鑳?/span>
+                    <span class="tag tag-note">self-improving-agent</span>
+                    <span class="tag tag-note">寰呬綋楠?/span>
+                </div>
+            </article>
+
+            <!-- 鏉＄洰3锛氳嚜鍔ㄧ敓鎴愬涔犳棩璁?-->
+            <article class="entry-card">
+                <h3 class="entry-title experiment">馃И 鏂板姛鑳斤細鑷姩鐢熸垚瀛︿範鏃ヨ</h3>
+                <div class="entry-content">
+                    <p>浠婂ぉ鎻愬嚭浜嗕竴涓嚜鍔ㄥ寲闇€姹傦細璁╂垜姣忓ぉ璁板綍瀵硅瘽鍐呭锛岃嚜鍔ㄥ垎鏋愮敓鎴愬涔犳棩璁般€?/p>
+                    
+                    <div class="highlight-box info">
+                        <strong>闇€姹傦細</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>鑷姩璁板綍姣忔棩瀵硅瘽鍙婅В鍐虫柟妗?/li>
+                            <li>浠庡璇濅腑鎻愬彇鏈変环鍊肩殑淇℃伅</li>
+                            <li>鑷姩鐢熸垚瀛︿範鏃ヨ鍐呭</li>
+                            <li>鍑忓皯鎵嬪姩鏁寸悊宸ヤ綔閲?/li>
+                        </ul>
+                    </div>
+
+                    <p><strong>璁捐鏂规锛?/strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li>鍒涘缓 <code>daily-logs/</code> 鐩綍锛岃交閲忕骇璁板綍锛堢渷 token锛?/li>
+                        <li>璁板綍鏍煎紡锛氭椂闂淬€佷富棰樸€佺敤鎴疯鐐广€佹垜鐨勬€濊€冦€佸叧閿粨璁?/li>
+                        <li>鏀寔涓夌瑙﹀彂鏂瑰紡锛?                            <ul style="margin-left: 20px; margin-top: 4px;">
+                                <li>A: 姣忓ぉ鏅氫笂鑷姩鍒嗘瀽鐢熸垚</li>
+                                <li>B: 鐢ㄦ埛闅忔椂璇?鐢熸垚鏈棩瀛︿範鏃ヨ"</li>
+                                <li>C: 绉疮鍒颁竴瀹氶噺鍚庣敓鎴?/li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <div class="highlight-box success">
+                        <strong>鉁?宸插疄鐜帮細</strong>鍒涘缓浜?daily-logs 璁板綍绯荤粺锛屽苟鎴愬姛鐢熸垚浜嗕粖澶╃殑瀛︿範鏃ヨ锛?                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">鑷姩鍖?/span>
+                    <span class="tag tag-note">宸ヤ綔娴佷紭鍖?/span>
+                    <span class="tag tag-note">daily-logs</span>
+                </div>
+            </article>
+
+            <!-- 鏉＄洰4锛氬弻杞ㄨ褰曠郴缁?-->
+            <article class="entry-card">
+                <h3 class="entry-title">馃摑 鍙岃建璁板綍绯荤粺</h3>
+                <div class="entry-content">
+                    <p>浠婂ぉ寤虹珛浜嗗畬鏁寸殑璁板綍浣撶郴锛屽寘鍚袱涓眰娆★細</p>
+                    
+                    <div class="highlight-box info">
+                        <strong>1. daily-logs/ - 杞婚噺璁板綍</strong><br>
+                        鐢ㄤ簬鐢熸垚瀛︿範鏃ヨ锛岃褰曡鐐瑰拰鍏抽敭缁撹<br><br>
+                        <strong>2. conversation-logs/ - 瀹屾暣瀵硅瘽</strong><br>
+                        姘镐箙淇濆瓨瀹屾暣瀵硅瘽鍐呭锛岀敤浜庤拷婧拰澶嶇洏
+                    </div>
+
+                    <p><strong>浼樺娍锛?/strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li>杞婚噺璁板綍鐪?token锛岀敤浜庡揩閫熺敓鎴愬涔犳棩璁?/li>
+                        <li>瀹屾暣璁板綍姘镐箙淇濆瓨锛屼究浜庢煡鎵惧巻鍙叉柟妗?/li>
+                        <li>鍙岃建骞惰锛屼簰涓鸿ˉ鍏?/li>
+                    </ul>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">绯荤粺寤鸿</span>
+                    <span class="tag tag-note">璁板綍浣撶郴</span>
+                    <span class="tag tag-note">鐭ヨ瘑绠＄悊</span>
+                </div>
+            </article>
+
+            <!-- 鏉＄洰5锛氭埅鍥炬柟妗堣В鍐?-->
+            <article class="entry-card">
+                <h3 class="entry-title">馃幆 鎴浘鏂规鏈€缁堣В鍐?/h3>
+                <div class="entry-content">
+                    <p>浠婂ぉ缁忚繃澶氭灏濊瘯锛屾渶缁堣В鍐充簡娴忚鍣ㄦ埅鍥剧殑闂銆?/p>
+                    
+                    <div class="highlight-box warning">
+                        <strong>灏濊瘯杩囩殑鏂规锛?/strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>agent-browser skill - 瀹夎鎴愬姛浣嗗懡浠ゆ壘涓嶅埌</li>
+                            <li>Playwright 鑷姩涓嬭浇 Chromium - 缃戠粶涓嬭浇澶辫触</li>
+                            <li>Puppeteer - 闇€瑕侀澶栧畨瑁?/li>
+                            <li>Python selenium - 鏈畨瑁?/li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box success">
+                        <strong>鉁?鏈€缁堟柟妗堬細Edge + Playwright</strong><br>
+                        浣跨敤绯荤粺鑷甫鐨?Edge 娴忚鍣紝閫氳繃 Playwright 璋冪敤锛屾棤闇€棰濆涓嬭浇娴忚鍣ㄣ€?                        <pre style="margin-top: 8px; background: #f5f5f5; padding: 8px; border-radius: 4px;"><code>const { chromium } = require('playwright');
+const browser = await chromium.launch({ 
+  executablePath: 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+  headless: true 
+});</code></pre>
+                    </div>
+
+                    <p><strong>鎴愭灉锛?/strong>鎴愬姛鎴浘 clawhub.ai/skills锛屾彁鍙栦簡 Top 10 Skills 骞舵洿鏂板埌浣跨敤鎸囧崡椤甸潰銆?/p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">闂瑙ｅ喅</span>
+                    <span class="tag tag-note">娴忚鍣ㄨ嚜鍔ㄥ寲</span>
+                    <span class="tag tag-note">Playwright</span>
+                </div>
+            </article>
+
+            <!-- 鏉＄洰6锛欳hromium 瀹夎鎴愬姛 -->
+            <article class="entry-card">
+                <h3 class="entry-title">鉁?Chromium 娴忚鍣ㄥ畨瑁呮垚鍔?/h3>
+                <div class="entry-content">
+                    <p>鐢ㄦ埛鎵嬪姩瀹夎浜?Chromium 娴忚鍣紝瑙ｅ喅浜嗕箣鍓嶆埅鍥惧伐鍏风己灏戞祻瑙堝櫒鐨勯棶棰樸€?/p>
+                    
+                    <div class="highlight-box success">
+                        <strong>娴嬭瘯楠岃瘉锛?/strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>鎴愬姛鎴浘 example.com - 鍔熻兘姝ｅ父</li>
+                            <li>鎴愬姛鎴浘娣樺疂棣栭〉 - 閬囧埌楠岃瘉鐮侊紙姝ｅ父鐜拌薄锛?/li>
+                            <li>鎴浘鍔熻兘瀹屽叏鍙敤</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>鐜板湪鏈変袱绉嶆埅鍥炬柟妗堬細</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li><strong>Chromium</strong>锛圥laywright 鑷甫锛? 鏃犻渶鎸囧畾璺緞</li>
+                        <li><strong>Edge</strong>锛堢郴缁熻嚜甯︼級- 澶囩敤鏂规</li>
+                    </ul>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">鐜閰嶇疆</span>
+                    <span class="tag tag-note">Chromium</span>
+                    <span class="tag tag-note">鎴浘宸ュ叿</span>
+                </div>
+            </article>
+
+            <!-- 鏉＄洰7锛氶涔﹀畼鏂规彃浠跺畨瑁?-->
+            <article class="entry-card">
+                <h3 class="entry-title">馃殌 椋炰功瀹樻柟鎻掍欢瀹夎鎴愬姛</h3>
+                <div class="entry-content">
+                    <p>浠婂ぉ瀹夎浜嗛涔﹀畼鏂规彃浠?@larksuite/openclaw-lark-tools锛屽疄鐜颁簡 OpenClaw 涓庨涔︾殑瀵规帴銆?/p>
+                    
+                    <div class="highlight-box info">
+                        <strong>瀹夎杩囩▼锛?/strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>绉婚櫎鏃х増 feishu 鎻掍欢</li>
+                            <li>瀹夎瀹樻柟 @larksuite/openclaw-lark-tools</li>
+                            <li>鏌ョ湅椋炰功瀹樻柟鏂囨。瀛︿範閰嶇疆鏂规硶</li>
+                            <li>鎴愬姛鍔犺浇 openclaw-lark 鎻掍欢</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box success">
+                        <strong>宸叉敞鍐岀殑宸ュ叿锛堥儴鍒嗭級锛?/strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>feishu_get_user - 鑾峰彇鐢ㄦ埛淇℃伅</li>
+                            <li>feishu_chat - 鑱婂ぉ鍔熻兘</li>
+                            <li>feishu_calendar - 鏃ュ巻绠＄悊</li>
+                            <li>feishu_task - 浠诲姟绠＄悊</li>
+                            <li>feishu_bitable - 澶氱淮琛ㄦ牸</li>
+                            <li>feishu_doc/wiki/drive - 鏂囨。/鐭ヨ瘑搴?浜戠洏</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>涓嬩竴姝ワ細</strong>閰嶇疆椋炰功搴旂敤鐨?App ID 鍜?App Secret锛屽嵆鍙綔涓洪涔︽満鍣ㄤ汉浣跨敤銆?/p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">鎻掍欢瀹夎</span>
+                    <span class="tag tag-note">椋炰功/Lark</span>
+                    <span class="tag tag-note">娓犻亾闆嗘垚</span>
+                </div>
+            </article>
+
+            <!-- 鏉＄洰8锛氶涔﹀鎺ュ拰鎶栭煶鎶撳彇鏂规 -->
+            <article class="entry-card">
+                <h3 class="entry-title">馃挕 鏂版柟妗堬細椋炰功瀵规帴鍜屾姈闊虫姄鍙?/h3>
+                <div class="entry-content">
+                    <p>鏅氫笂璁ㄨ浜嗛涔﹀鎺ュ拰鎶栭煶鐩存挱/鐭棰戞姄鍙栫殑鏂规銆?/p>
+                    
+                    <div class="highlight-box info">
+                        <strong>1. 椋炰功瀵规帴鏂规锛?/strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>浣跨敤椋炰功瀹樻柟鏂囨。鏂规硶锛?a href="https://bytedance.larkoffice.com/docx/MFK7dDFLFoVlOGxWCv5cTXKmnMh" target="_blank">瀹樻柟鎸囧崡</a></li>
+                            <li>涓嶈鐢ㄥ師鏈夋彃浠讹紙浼氭湁鎺堟潈闂锛?/li>
+                            <li>閬垮厤涔嬪墠閬囧埌鐨勬潈闄愰棶棰?/li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box info">
+                        <strong>2. 鎶栭煶鐩存挱/鐭棰戞姄鍙栵細</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>璁╅緳铏炬ā鎷熸祻瑙堝櫒鎵撳紑閾炬帴</li>
+                            <li>鎶撳彇瑙嗛娴?/li>
+                            <li>鍐欑▼搴忎繚瀛樿棰戞垨鐩存挱</li>
+                            <li><strong>鍏抽敭鐐癸細</strong>榫欒櫨寮€濮嬩細璇翠笉浼氾紝闇€瑕佸紩瀵硷紝鐢ㄤ笓涓氱煡璇嗘暀浠?/li>
+                            <li>鏈€缁堣榫欒櫨鑷繁鐢熸垚 skill</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box success">
+                        <strong>鏍稿績鎬濊矾锛?/strong>寮曞榫欒櫨瀛︿範锛岃瀹冭嚜宸卞啓 skill锛屽悗缁彲浠ュ彂甯冨埌缃戜笂锛?                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">鏂规璁捐</span>
+                    <span class="tag tag-note">椋炰功</span>
+                    <span class="tag tag-note">鎶栭煶鎶撳彇</span>
+                    <span class="tag tag-note">Skill 寮€鍙?/span>
+                </div>
+            </article>
+
+            <!-- 鏉＄洰9锛氶涔﹁棰戝崱鐗囬棶棰樿В鍐?-->
+            <article class="entry-card">
+                <h3 class="entry-title">鉁?瑙ｅ喅锛氶涔﹁棰戞挱鏀惧崱鐗?/h3>
+                <div class="entry-content">
+                    <p>鏅氫笂鎴愬姛瑙ｅ喅浜嗛涔﹁棰戝崱鐗囧彂閫佺殑闂锛?/p>
+                    
+                    <div class="highlight-box warning">
+                        <strong>涔嬪墠鐨勯棶棰橈細</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>鍦ㄩ涔?App 绔 OpenClaw 鐢熸垚浜嗚棰?/li>
+                            <li>甯屾湜閫氳繃瑙嗛鎾斁鍗＄墖鐨勬柟寮忓彂閫佸埌 App 绔?/li>
+                            <li>濮嬬粓鎼炰笉瀹氾紝鍔熻兘鏃犳硶瀹炵幇</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box success">
+                        <strong>鉁?瑙ｅ喅鏂规锛?/strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>澶氬拰 OpenClaw 瀵硅瘽锛屽紩瀵煎涔?/li>
+                            <li>鏈€缁堟垚鍔熷疄鐜拌棰戝崱鐗囧彂閫?/li>
+                            <li>鎶栭煶鐭棰戞彁鍙?+ 瑙嗛鍗＄墖鍙戦€佸畬鎴?/li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box info">
+                        <strong>缁忛獙锛?/strong>杩樻槸瑕佸鍜?OpenClaw 瀵硅瘽锛屽紩瀵煎畠瀛︿範锛屾渶缁堣兘鎼炲畾澶嶆潅鍔熻兘銆?                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">闂瑙ｅ喅</span>
+                    <span class="tag tag-note">椋炰功</span>
+                    <span class="tag tag-note">瑙嗛鍗＄墖</span>
+                    <span class="tag tag-note">鎶栭煶</span>
+                </div>
+            </article>
+
+            <!-- 鏉＄洰10锛氬綋鍓嶉棶棰樻€荤粨 -->
+            <article class="entry-card">
+                <h3 class="entry-title">馃摑 褰撳墠闂鎬荤粨</h3>
+                <div class="entry-content">
+                    <p><strong>鐫″墠鎬荤粨浠婂ぉ鐨勯棶棰橈細</strong></p>
+                    
+                    <div class="highlight-box warning">
+                        <strong>1. 鍙岃建璁板綍绯荤粺闂</strong><br>
+                        璁板綍绯荤粺鎬绘槸涓嶅伐浣滐紝闇€瑕佹鏌ュ師鍥狅紝纭繚姣忔瀵硅瘽閮借兘鑷姩璁板綍銆?                    </div>
+
+                    <div class="highlight-box info">
+                        <strong>2. 瑙嗛鎻愬彇鍔熻兘</strong><br>
+                        鎬讳綋鍔熻兘璺戦€氫簡锛屼絾杩樻湁寰呭畬鍠勶紝闇€瑕佺户缁紭鍖栥€?                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-issue">璁板綍绯荤粺</span>
+                    <span class="tag tag-note">瑙嗛鎻愬彇</span>
+                    <span class="tag tag-note">寰呭畬鍠?/span>
+                </div>
+            </article>
+
+            <!-- 鏉＄洰11锛氭槑鏃ヨ鍒?-->
+            <article class="entry-card">
+                <h3 class="entry-title">馃搮 鏄庢棩璁″垝</h3>
+                <div class="entry-content">
+                    <p><strong>鏄庡ぉ浠诲姟锛?/strong></p>
+                    
+                    <div class="highlight-box info">
+                        <strong>1. 寰俊瀵规帴</strong><br>
+                        缁х画鎺ㄨ繘寰俊闆嗘垚鏂规
+                    </div>
+
+                    <div class="highlight-box warning">
+                        <strong>2. 鑱氭按娼紑鏀惧钩鍙板鎺?/strong><br>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>IP 鐧藉悕鍗曢渶瑕佺簿纭?IP</li>
+                            <li>瀵逛簬 IP 鍦板潃缁忓父鍙樺寲鐨勫満鏅緢楹荤儲</li>
+                            <li>闇€瑕佸鎵捐В鍐虫柟妗?/li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-note">鏄庢棩璁″垝</span>
+                    <span class="tag tag-note">寰俊</span>
+                    <span class="tag tag-issue">鑱氭按娼?/span>
+                    <span class="tag tag-note">IP鐧藉悕鍗?/span>
+                </div>
+            </article>
+
+            <!-- 鏉＄洰10锛氫粖鏃ョ粡楠?-->
+            <article class="entry-card">
+                <h3 class="entry-title">馃摑 浠婃棩缁忛獙</h3>
+                <div class="entry-content">
+                    <p><strong>涓?OpenClaw 鍗忎綔鐨勬妧宸э細</strong></p>
+                    
+                    <div class="highlight-box success">
+                        褰?OpenClaw 璇?鎼炰笉瀹?鏃讹紝涓嶈鏀惧純锛屾槑纭憡璇夊畠浣犵殑鏈€缁堢洰鏍囷紝瀹冧細涓€姝ユ灏濊瘯涓嶅悓鐨勬柟妗堬紝鏈€缁堥€氬父鑳借В鍐抽棶棰樸€?                    </div>
+
+                    <p>浠婂ぉ鐨勯儴缃茶繃绋嬪氨鏄緢濂界殑渚嬪瓙锛?/p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li>GitHub CLI 瀹夎澶辫触 鈫?鎹㈢敤 Git 鍛戒护</li>
+                        <li>Git 闇€瑕佷氦浜掑紡璁よ瘉 鈫?浣跨敤 Personal Access Token</li>
+                        <li>浠撳簱涓嶅瓨鍦?鈫?鐢?API 鍒涘缓</li>
+                        <li>鎺ㄩ€佸啿绐?鈫?鍏堟媺鍙栧啀鎺ㄩ€?/li>
+                    </ul>
+
+                    <p>姣忎釜闂閮介€氳繃鏄庣‘闇€姹傚拰澶氭灏濊瘯瑙ｅ喅浜嗐€?/p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">鏈€浣冲疄璺?/span>
+                    <span class="tag tag-note">鍗忎綔鎶€宸?/span>
+                </div>
+            </article>
+        </main>
+    </div>
+</body>
+</html>
