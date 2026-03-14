@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025-03-10 - 学习日记</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 左侧导航 */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin: 4px 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .nav-link.active {
+            background: #f0f7ff;
+            color: #1890ff;
+            border-left-color: #1890ff;
+            font-weight: 500;
+        }
+
+        .nav-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* 右侧内容区 */
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 48px;
+            max-width: 900px;
+        }
+
+        .date-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .date-badge {
+            background: #1890ff;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 16px;
+        }
+
+        .date-title {
+            font-size: 24px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .entry-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+        }
+
+        .entry-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .entry-title::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background: #52c41a;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        .entry-title.issue::before {
+            background: #ff4d4f;
+        }
+
+        .entry-title.experiment::before {
+            background: #722ed1;
+        }
+
+        .entry-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .entry-content p {
+            margin-bottom: 12px;
+        }
+
+        .highlight-box {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .highlight-box.success {
+            background: #f6ffed;
+            border-color: #b7eb8f;
+        }
+
+        .highlight-box.warning {
+            background: #fffbe6;
+            border-color: #ffe58f;
+        }
+
+        .highlight-box.info {
+            background: #e6f7ff;
+            border-color: #91d5ff;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .tag-success {
+            background: #f6ffed;
+            color: #52c41a;
+            border: 1px solid #b7eb8f;
+        }
+
+        .tag-issue {
+            background: #fff1f0;
+            color: #ff4d4f;
+            border: 1px solid #ffa39e;
+        }
+
+        .tag-note {
+            background: #e6f7ff;
+            color: #1890ff;
+            border: 1px solid #91d5ff;
+        }
+
+        .tags-container {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed #e8e8e8;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧导航 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h1>📚 学习日记</h1>
+                    <p>OpenClaw 使用记录</p>
+                </a>
+            </div>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="2025-03-10.html" class="nav-link active">
+                        2025-03-10
+                        <div class="nav-date">初次安装与探索</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2025-03-11.html" class="nav-link">
+                        2025-03-11
+                        <div class="nav-date">微信集成与飞书对接</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2025-03-12.html" class="nav-link">
+                        2025-03-12
+                        <div class="nav-date">GitHub Pages 部署</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 右侧内容 -->
+        <main class="content">
+            <div class="date-header">
+                <span class="date-badge">第一天</span>
+                <h2 class="date-title">2025年3月10日</h2>
+            </div>
+
+            <!-- 条目1：Mac安装问题 -->
+            <article class="entry-card">
+                <h3 class="entry-title issue">Mac Air 2018 安装踩坑</h3>
+                <div class="entry-content">
+                    <p>在 Mac Air 2018 款上安装 OpenClaw（龙虾），先升级了系统，安装和启动都成功了。</p>
+                    
+                    <div class="highlight-box warning">
+                        <strong>问题：</strong>一直出现 <code>LLM request timeout</code>，请求发出去 2 秒后就会超时跳出。
+                    </div>
+
+                    <p>尝试了各种解决办法：</p>
+                    <ul style="margin-left: 20px; margin-bottom: 12px;">
+                        <li>修改 timeout 参数</li>
+                        <li>调整龙虾自身的配置</li>
+                        <li>设置系统变量</li>
+                        <li>修改 HTTP 请求的默认值</li>
+                    </ul>
+
+                    <p>中间猜测是大模型的适配问题，也试了 Qwen2.5、MiniMax，最终使用 Moonshot，还是不行。</p>
+
+                    <div class="highlight-box info">
+                        <strong>结论：</strong>看起来是 Mac Air 老版本兼容问题，等空了再去尝试解决。
+                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-issue">安装问题</span>
+                    <span class="tag tag-issue">超时</span>
+                    <span class="tag tag-note">Mac Air 2018</span>
+                    <span class="tag tag-note">待解决</span>
+                </div>
+            </article>
+
+            <!-- 条目2：Windows安装成功 -->
+            <article class="entry-card">
+                <h3 class="entry-title">Windows 安装成功</h3>
+                <div class="entry-content">
+                    <p>当天晚上，在 Windows 上按照官网推荐的方式安装了 OpenClaw。</p>
+                    
+                    <div class="highlight-box success">
+                        <strong>✅ 使用 Moonshot API Key，一次性就成功了！</strong>
+                    </div>
+
+                    <p>对比 Mac 上的折腾，Windows 上的安装体验非常顺畅。</p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">安装成功</span>
+                    <span class="tag tag-note">Windows</span>
+                    <span class="tag tag-note">Moonshot</span>
+                </div>
+            </article>
+
+            <!-- 条目3：第一个项目 - OpenClaw指南 -->
+            <article class="entry-card">
+                <h3 class="entry-title">🎉 第一个项目：OpenClaw 使用指南</h3>
+                <div class="entry-content">
+                    <p>同天晚上，让龙虾帮忙做了一个 OpenClaw 指南网页。</p>
+                    
+                    <p><strong>内容来源：</strong>整理了我与龙虾对话中问他的 3 个关于使用上的问题和答案。</p>
+
+                    <div class="highlight-box success">
+                        <strong>效果非常棒！</strong>第一次感受到 AI 辅助开发的强大。
+                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">项目完成</span>
+                    <span class="tag tag-note">网页开发</span>
+                    <span class="tag tag-note">使用指南</span>
+                </div>
+            </article>
+
+            <!-- 条目4：携程机票查询实验 -->
+            <article class="entry-card">
+                <h3 class="entry-title experiment">🧪 实验：携程机票查询自动化</h3>
+                <div class="entry-content">
+                    <p>同天晚上，尝试让龙虾帮忙做一个打开网页、去携程上查询机票的功能。</p>
+
+                    <div class="highlight-box info">
+                        <strong>要求：</strong>不是用 URL 直接定位的方式，而是让龙虾自己学习去页面填写内容。
+                    </div>
+
+                    <p>龙虾使用的是内置浏览器去尝试填写表单。在选择"单程"部分时，他总是搞不定，一直自己尝试各种方案。</p>
+
+                    <div class="highlight-box warning">
+                        <strong>结果：</strong>虽然最终失败了（后来让他停掉了），但他自我学习的能力真的很赞！
+                    </div>
+
+                    <p>看着龙虾不断尝试、调整策略的过程，虽然没成功，但让我对它的自主学习能力印象深刻。</p>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-issue">实验失败</span>
+                    <span class="tag tag-note">浏览器自动化</span>
+                    <span class="tag tag-note">自主学习</span>
+                    <span class="tag tag-note">携程</span>
+                </div>
+            </article>
+        </main>
+    </div>
+</body>
+</html>
