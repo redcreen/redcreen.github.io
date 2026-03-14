@@ -405,7 +405,107 @@
                 </div>
             </article>
 
-            <!-- 条目5：今日总结 -->
+            <!-- 条目5：AI 失忆问题暴露 -->
+            <article class="entry-card">
+                <h3 class="entry-title">🤖 AI 失忆问题暴露</h3>
+                <div class="entry-content">
+                    <p><strong>有趣的现象：</strong>今天更新学习日记时，OpenClaw 忘记了昨天配置好的 GitHub 同步流程，需要提醒"回忆昨天"才会。</p>
+                    
+                    <div class="highlight-box warning">
+                        <strong>问题分析：</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>每次会话重启后，AI 需要重新读取文件才能知道工作流程</li>
+                            <li>Mem0 记忆昨天刚配置，内容还不完整</li>
+                            <li>真正的持久化在文件系统，但 AI 不会自动读取所有项目目录</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box info">
+                        <strong>记忆分层架构：</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li><strong>Mem0 长期记忆</strong> - 跨会话保留，但还在完善中</li>
+                            <li><strong>文件系统</strong> - 真正的持久化，需要显式读取</li>
+                            <li><strong>会话内存</strong> - 当前对话上下文，重启即失</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box success">
+                        <strong>改进方案：</strong>会话启动时除了读 SOUL.md / USER.md / MEMORY.md，还应该自动检查重要的项目目录（如 redcreen.github.io/）
+                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-warning">问题发现</span>
+                    <span class="tag tag-note">AI 记忆</span>
+                    <span class="tag tag-note">会话重启</span>
+                </div>
+            </article>
+
+            <!-- 条目6：Windows 安装 OpenClaw 技巧 -->
+            <article class="entry-card">
+                <h3 class="entry-title">💡 Windows 安装 OpenClaw 技巧</h3>
+                <div class="entry-content">
+                    <p><strong>在 Windows 上安装/更新 OpenClaw 时可能遇到 Git 校验问题，使用以下命令可以绕过：</strong></p>
+                    
+                    <div class="highlight-box info">
+                        <strong>管理员 PowerShell 命令：</strong>
+                        <pre style="background: #f5f5f5; padding: 12px; border-radius: 6px; margin: 12px 0; overflow-x: auto;">npm install -g openclaw@latest --legacy-peer-deps --ignore-scripts --no-fund --no-audit</pre>
+                    </div>
+
+                    <div class="highlight-box">
+                        <strong>参数解释：</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li><code>--legacy-peer-deps</code>：核心参数，绕过严格的 Git 校验</li>
+                            <li><code>--ignore-scripts</code>：跳过安装时的脚本执行（防御性）</li>
+                            <li><code>--no-fund</code> / <code>--no-audit</code>：加快安装速度，减少干扰</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box warning">
+                        <strong>注意：</strong>需要在<strong>管理员 PowerShell</strong> 中运行，普通权限可能会遇到权限错误。
+                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">技巧</span>
+                    <span class="tag tag-note">Windows</span>
+                    <span class="tag tag-note">npm</span>
+                </div>
+            </article>
+
+            <!-- 条目7：LCM 数据库验证通过（晚间更新）-->
+            <article class="entry-card">
+                <h3 class="entry-title">🌙 LCM 数据库验证通过（晚间更新）</h3>
+                <div class="entry-content">
+                    <p><strong>时间：</strong>23:21</p>
+                    <p><strong>今日晚间成果：</strong></p>
+                    
+                    <div class="highlight-box success">
+                        <strong>LCM (Lossless-Claw) 数据库终于安装验证通过了！</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px;">
+                            <li>✅ 其实早就好用了，做了大量实验才放心</li>
+                            <li>✅ 希望它成为未来的基石，让三德子越来越聪明</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>技术细节：</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 8px;">
+                        <li><strong>数据库：</strong><code>lcm2.db</code> (SQLite)</li>
+                        <li><strong>记录方式：</strong>SQLite + Markdown 文件双保险</li>
+                        <li><strong>时区：</strong>已修正为北京时间 (GMT+8)</li>
+                        <li><strong>状态：</strong>15 条测试消息验证通过</li>
+                    </ul>
+
+                    <div class="highlight-box info">
+                        <strong>感悟：</strong>技术的可靠性来自于充分的验证。虽然配置早就完成了，但只有通过大量实验才能真正放心。这个记忆系统将成为三德子持续学习和成长的基础。
+                    </div>
+                </div>
+                <div class="tags-container">
+                    <span class="tag tag-success">LCM</span>
+                    <span class="tag tag-success">验证通过</span>
+                    <span class="tag tag-note">记忆系统</span>
+                </div>
+            </article>
+
+            <!-- 条目8：今日总结 -->
             <article class="entry-card">
                 <h3 class="entry-title">📝 今日总结</h3>
                 <div class="entry-content">
@@ -415,6 +515,8 @@
                             <li>✅ 记忆系统架构设计（MEMORY.md）</li>
                             <li>✅ Mem0 Cloud 云端部署</li>
                             <li>✅ 自动记忆捕获/召回启用</li>
+                            <li>✅ 学习日记自动化同步 GitHub</li>
+                            <li>✅ Qwen 模型配置</li>
                         </ul>
                     </div>
 
@@ -423,10 +525,12 @@
                         <ul style="margin-left: 20px; margin-top: 8px;">
                             <li>⚠️ 跨 Channel 记忆同步问题</li>
                             <li>⚠️ 不同 userId 之间的记忆隔离</li>
+                            <li>⚠️ AI 会话重启后的"失忆"问题</li>
+                            <li>⚠️ lossless-claw 插件安装（依赖私有包）</li>
                         </ul>
                     </div>
 
-                    <p><strong>下一步：</strong>研究 OpenClaw 记忆系统配置，寻找跨 channel 共享记忆的方案</p>
+                    <p><strong>下一步：</strong>研究 OpenClaw 记忆系统配置，寻找跨 channel 共享记忆的方案；优化会话启动时的文件检查机制</p>
                 </div>
                 <div class="tags-container">
                     <span class="tag tag-note">总结</span>
