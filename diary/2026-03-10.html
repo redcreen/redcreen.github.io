@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026-03-10 - 瀛︿範鏃ヨ</title>
+    <title>2026-03-10 - 学习日记</title>
     <style>
         * {
             margin: 0;
@@ -22,7 +22,7 @@
             min-height: 100vh;
         }
 
-        /* 宸︿晶瀵艰埅 */
+        /* 左侧导航 */
         .sidebar {
             width: 280px;
             background: #fff;
@@ -86,7 +86,7 @@
             margin-top: 2px;
         }
 
-        /* 鍙充晶鍐呭鍖?*/
+        /* 右侧内容区 */
         .content {
             flex: 1;
             margin-left: 280px;
@@ -220,7 +220,7 @@
             border-top: 1px dashed #e8e8e8;
         }
 
-        /* 鍝嶅簲寮?*/
+        /* 响应式 */
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -239,138 +239,142 @@
 </head>
 <body>
     <div class="container">
-        <!-- 宸︿晶瀵艰埅 -->
+        <!-- 左侧导航 -->
         <nav class="sidebar">
             <div class="sidebar-header">
                 <a href="index.html" style="text-decoration: none; color: inherit;">
-                    <h1>馃摎 瀛︿範鏃ヨ</h1>
-                    <p>OpenClaw 浣跨敤璁板綍</p>
+                    <h1>📚 学习日记</h1>
+                    <p>OpenClaw 使用记录</p>
                 </a>
             </div>
             <ul class="nav-list">
                 <li class="nav-item">
                     <a href="2026-03-10.html" class="nav-link active">
                         2026-03-10
-                        <div class="nav-date">鍒濇瀹夎涓庢帰绱?/div>
+                        <div class="nav-date">初次安装与探索</div>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="2025-03-11.html" class="nav-link">
-                        2025-03-11
-                        <div class="nav-date">寰俊闆嗘垚涓庨涔﹀鎺?/div>
+                    <a href="2026-03-11.html" class="nav-link">
+                        2026-03-11
+                        <div class="nav-date">微信集成与飞书对接</div>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="2025-03-12.html" class="nav-link">
-                        2025-03-12
-                        <div class="nav-date">GitHub Pages 閮ㄧ讲</div>
+                    <a href="2026-03-12.html" class="nav-link">
+                        2026-03-12
+                        <div class="nav-date">GitHub Pages 部署</div>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="2026-03-13.html" class="nav-link">
                         2026-03-13
-                        <div class="nav-date">璁板繂绯荤粺鎶樿吘</div>
+                        <div class="nav-date">记忆系统折腾</div>
                     </a>
                 </li>
             </ul>
         </nav>
 
-        <!-- 鍙充晶鍐呭 -->
+        <!-- 右侧内容 -->
         <main class="content">
             <div class="date-header">
-                <span class="date-badge">绗竴澶?/span>
-                <h2 class="date-title">2025骞?鏈?0鏃?/h2>
+                <span class="date-badge">第一天</span>
+                <h2 class="date-title">2025年3月10日</h2>
             </div>
 
-            <!-- 鏉＄洰1锛歁ac瀹夎闂 -->
+            <!-- 条目1：Mac安装问题 -->
             <article class="entry-card">
-                <h3 class="entry-title issue">Mac Air 2018 瀹夎韪╁潙</h3>
+                <h3 class="entry-title issue">Mac Air 2018 安装踩坑</h3>
                 <div class="entry-content">
-                    <p>鍦?Mac Air 2018 娆句笂瀹夎 OpenClaw锛堥緳铏撅級锛屽厛鍗囩骇浜嗙郴缁燂紝瀹夎鍜屽惎鍔ㄩ兘鎴愬姛浜嗐€?/p>
+                    <p>在 Mac Air 2018 款上安装 OpenClaw（龙虾），先升级了系统，安装和启动都成功了。</p>
                     
                     <div class="highlight-box warning">
-                        <strong>闂锛?/strong>涓€鐩村嚭鐜?<code>LLM request timeout</code>锛岃姹傚彂鍑哄幓 2 绉掑悗灏变細瓒呮椂璺冲嚭銆?                    </div>
+                        <strong>问题：</strong>一直出现 <code>LLM request timeout</code>，请求发出去 2 秒后就会超时跳出。
+                    </div>
 
-                    <p>灏濊瘯浜嗗悇绉嶈В鍐冲姙娉曪細</p>
+                    <p>尝试了各种解决办法：</p>
                     <ul style="margin-left: 20px; margin-bottom: 12px;">
-                        <li>淇敼 timeout 鍙傛暟</li>
-                        <li>璋冩暣榫欒櫨鑷韩鐨勯厤缃?/li>
-                        <li>璁剧疆绯荤粺鍙橀噺</li>
-                        <li>淇敼 HTTP 璇锋眰鐨勯粯璁ゅ€?/li>
+                        <li>修改 timeout 参数</li>
+                        <li>调整龙虾自身的配置</li>
+                        <li>设置系统变量</li>
+                        <li>修改 HTTP 请求的默认值</li>
                     </ul>
 
-                    <p>涓棿鐚滄祴鏄ぇ妯″瀷鐨勯€傞厤闂锛屼篃璇曚簡 Qwen2.5銆丮iniMax锛屾渶缁堜娇鐢?Moonshot锛岃繕鏄笉琛屻€?/p>
+                    <p>中间猜测是大模型的适配问题，也试了 Qwen2.5、MiniMax，最终使用 Moonshot，还是不行。</p>
 
                     <div class="highlight-box info">
-                        <strong>缁撹锛?/strong>鐪嬭捣鏉ユ槸 Mac Air 鑰佺増鏈吋瀹归棶棰橈紝绛夌┖浜嗗啀鍘诲皾璇曡В鍐炽€?                    </div>
+                        <strong>结论：</strong>看起来是 Mac Air 老版本兼容问题，等空了再去尝试解决。
+                    </div>
                 </div>
                 <div class="tags-container">
-                    <span class="tag tag-issue">瀹夎闂</span>
-                    <span class="tag tag-issue">瓒呮椂</span>
+                    <span class="tag tag-issue">安装问题</span>
+                    <span class="tag tag-issue">超时</span>
                     <span class="tag tag-note">Mac Air 2018</span>
-                    <span class="tag tag-note">寰呰В鍐?/span>
+                    <span class="tag tag-note">待解决</span>
                 </div>
             </article>
 
-            <!-- 鏉＄洰2锛歐indows瀹夎鎴愬姛 -->
+            <!-- 条目2：Windows安装成功 -->
             <article class="entry-card">
-                <h3 class="entry-title">Windows 瀹夎鎴愬姛</h3>
+                <h3 class="entry-title">Windows 安装成功</h3>
                 <div class="entry-content">
-                    <p>褰撳ぉ鏅氫笂锛屽湪 Windows 涓婃寜鐓у畼缃戞帹鑽愮殑鏂瑰紡瀹夎浜?OpenClaw銆?/p>
+                    <p>当天晚上，在 Windows 上按照官网推荐的方式安装了 OpenClaw。</p>
                     
                     <div class="highlight-box success">
-                        <strong>鉁?浣跨敤 Moonshot API Key锛屼竴娆℃€у氨鎴愬姛浜嗭紒</strong>
+                        <strong>✅ 使用 Moonshot API Key，一次性就成功了！</strong>
                     </div>
 
-                    <p>瀵规瘮 Mac 涓婄殑鎶樿吘锛學indows 涓婄殑瀹夎浣撻獙闈炲父椤虹晠銆?/p>
+                    <p>对比 Mac 上的折腾，Windows 上的安装体验非常顺畅。</p>
                 </div>
                 <div class="tags-container">
-                    <span class="tag tag-success">瀹夎鎴愬姛</span>
+                    <span class="tag tag-success">安装成功</span>
                     <span class="tag tag-note">Windows</span>
                     <span class="tag tag-note">Moonshot</span>
                 </div>
             </article>
 
-            <!-- 鏉＄洰3锛氱涓€涓」鐩?- OpenClaw鎸囧崡 -->
+            <!-- 条目3：第一个项目 - OpenClaw指南 -->
             <article class="entry-card">
-                <h3 class="entry-title">馃帀 绗竴涓」鐩細OpenClaw 浣跨敤鎸囧崡</h3>
+                <h3 class="entry-title">🎉 第一个项目：OpenClaw 使用指南</h3>
                 <div class="entry-content">
-                    <p>鍚屽ぉ鏅氫笂锛岃榫欒櫨甯繖鍋氫簡涓€涓?OpenClaw 鎸囧崡缃戦〉銆?/p>
+                    <p>同天晚上，让龙虾帮忙做了一个 OpenClaw 指南网页。</p>
                     
-                    <p><strong>鍐呭鏉ユ簮锛?/strong>鏁寸悊浜嗘垜涓庨緳铏惧璇濅腑闂粬鐨?3 涓叧浜庝娇鐢ㄤ笂鐨勯棶棰樺拰绛旀銆?/p>
+                    <p><strong>内容来源：</strong>整理了我与龙虾对话中问他的 3 个关于使用上的问题和答案。</p>
 
                     <div class="highlight-box success">
-                        <strong>鏁堟灉闈炲父妫掞紒</strong>绗竴娆℃劅鍙楀埌 AI 杈呭姪寮€鍙戠殑寮哄ぇ銆?                    </div>
+                        <strong>效果非常棒！</strong>第一次感受到 AI 辅助开发的强大。
+                    </div>
                 </div>
                 <div class="tags-container">
-                    <span class="tag tag-success">椤圭洰瀹屾垚</span>
-                    <span class="tag tag-note">缃戦〉寮€鍙?/span>
-                    <span class="tag tag-note">浣跨敤鎸囧崡</span>
+                    <span class="tag tag-success">项目完成</span>
+                    <span class="tag tag-note">网页开发</span>
+                    <span class="tag tag-note">使用指南</span>
                 </div>
             </article>
 
-            <!-- 鏉＄洰4锛氭惡绋嬫満绁ㄦ煡璇㈠疄楠?-->
+            <!-- 条目4：携程机票查询实验 -->
             <article class="entry-card">
-                <h3 class="entry-title experiment">馃И 瀹為獙锛氭惡绋嬫満绁ㄦ煡璇㈣嚜鍔ㄥ寲</h3>
+                <h3 class="entry-title experiment">🧪 实验：携程机票查询自动化</h3>
                 <div class="entry-content">
-                    <p>鍚屽ぉ鏅氫笂锛屽皾璇曡榫欒櫨甯繖鍋氫竴涓墦寮€缃戦〉銆佸幓鎼虹▼涓婃煡璇㈡満绁ㄧ殑鍔熻兘銆?/p>
+                    <p>同天晚上，尝试让龙虾帮忙做一个打开网页、去携程上查询机票的功能。</p>
 
                     <div class="highlight-box info">
-                        <strong>瑕佹眰锛?/strong>涓嶆槸鐢?URL 鐩存帴瀹氫綅鐨勬柟寮忥紝鑰屾槸璁╅緳铏捐嚜宸卞涔犲幓椤甸潰濉啓鍐呭銆?                    </div>
-
-                    <p>榫欒櫨浣跨敤鐨勬槸鍐呯疆娴忚鍣ㄥ幓灏濊瘯濉啓琛ㄥ崟銆傚湪閫夋嫨"鍗曠▼"閮ㄥ垎鏃讹紝浠栨€绘槸鎼炰笉瀹氾紝涓€鐩磋嚜宸卞皾璇曞悇绉嶆柟妗堛€?/p>
-
-                    <div class="highlight-box warning">
-                        <strong>缁撴灉锛?/strong>铏界劧鏈€缁堝け璐ヤ簡锛堝悗鏉ヨ浠栧仠鎺変簡锛夛紝浣嗕粬鑷垜瀛︿範鐨勮兘鍔涚湡鐨勫緢璧烇紒
+                        <strong>要求：</strong>不是用 URL 直接定位的方式，而是让龙虾自己学习去页面填写内容。
                     </div>
 
-                    <p>鐪嬬潃榫欒櫨涓嶆柇灏濊瘯銆佽皟鏁寸瓥鐣ョ殑杩囩▼锛岃櫧鐒舵病鎴愬姛锛屼絾璁╂垜瀵瑰畠鐨勮嚜涓诲涔犺兘鍔涘嵃璞℃繁鍒汇€?/p>
+                    <p>龙虾使用的是内置浏览器去尝试填写表单。在选择"单程"部分时，他总是搞不定，一直自己尝试各种方案。</p>
+
+                    <div class="highlight-box warning">
+                        <strong>结果：</strong>虽然最终失败了（后来让他停掉了），但他自我学习的能力真的很赞！
+                    </div>
+
+                    <p>看着龙虾不断尝试、调整策略的过程，虽然没成功，但让我对它的自主学习能力印象深刻。</p>
                 </div>
                 <div class="tags-container">
-                    <span class="tag tag-issue">瀹為獙澶辫触</span>
-                    <span class="tag tag-note">娴忚鍣ㄨ嚜鍔ㄥ寲</span>
-                    <span class="tag tag-note">鑷富瀛︿範</span>
-                    <span class="tag tag-note">鎼虹▼</span>
+                    <span class="tag tag-issue">实验失败</span>
+                    <span class="tag tag-note">浏览器自动化</span>
+                    <span class="tag tag-note">自主学习</span>
+                    <span class="tag tag-note">携程</span>
                 </div>
             </article>
         </main>
