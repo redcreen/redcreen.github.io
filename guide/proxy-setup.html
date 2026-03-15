@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerShell 代理配置 - OpenClaw 使用指南</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧导航栏 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🐾</span>
+                    <span class="logo-text">OpenClaw</span>
+                </div>
+                <p class="tagline">完全指南</p>
+            </div>
+            
+            <div class="nav-section">
+                <h3>基础概念</h3>
+                <ul>
+                    <li><a href="index.html">📖 概述</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>核心功能</h3>
+                <ul>
+                    <li><a href="multi-agent.html">🧠 多实例架构</a></li>
+                    <li><a href="task-execution.html">⚡ 任务执行机制</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>配置指南</h3>
+                <ul>
+                    <li><a href="config.html">🔧 配置文件详解</a></li>
+                    <li><a href="proxy-setup.html" class="active">🌐 PowerShell 代理配置</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>资源推荐</h3>
+                <ul>
+                    <li><a href="popular-skills.html">⭐ 最受欢迎的 Skills</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-footer">
+                <p>持续更新中...</p>
+            </div>
+        </nav>
+        
+        <!-- 主内容区 -->
+        <main class="content">
+            <header class="page-header">
+                <h1>🌐 PowerShell 代理配置指南</h1>
+                <p class="subtitle">在 PowerShell 中使用 v2raYN 代理的完整配置教程</p>
+            </header>
+            
+            <div class="content-section">
+                <div class="intro-box">
+                    <p>在 PowerShell 里使用 v2raYN 代理，关键在于理解两种不同的"代理"模式，以及如何让 PowerShell "听" v2raYN 的话。</p>
+                    <p>简单来说，v2raYN 本身是一个代理客户端，它会在你电脑的本地地址（<code>127.0.0.1</code>）上开启特定的端口（比如 <code>10808</code> 和 <code>10809</code>）来提供代理服务。要让 PowerShell 使用这个服务，你需要手动告诉它通过哪个端口来连接外部网络。</p>
+                </div>
+                
+                <h2>🧐 理解两种"代理"模式</h2>
+                <p>这里有两个容易混淆的概念，搞清楚它们，问题就解决了一半：</p>
+                
+                <div class="concept-cards">
+                    <div class="concept-card">
+                        <h3>1. v2raYN 的"系统代理"模式</h3>
+                        <p>这是 v2raYN 的一个功能开关。当你开启它时，v2raYN 会自动修改 Windows 的系统设置，让大部分<strong>图形界面程序</strong>（如浏览器）的流量通过代理。</p>
+                        <div class="warning-box">
+                            <strong>⚠️ 注意：</strong>这个操作并不会自动配置 PowerShell、CMD 这类命令行工具。
+                        </div>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <h3>2. PowerShell 的"环境变量代理"</h3>
+                        <p>PowerShell 以及很多命令行工具（如 <code>git</code>、<code>npm</code>、<code>pip</code>）会通过读取名为 <code>http_proxy</code> 和 <code>https_proxy</code> 的环境变量来决定是否使用代理以及使用的地址。</p>
+                        <div class="info-box">
+                            <strong>💡 关键：</strong>这是它们自己独立的"开关"，需要单独配置。
+                        </div>
+                    </div>
+                </div>
+                
+                <p>所以，即使你在 v2raYN 里开启了"系统代理"，PowerShell 也可能因为不知道代理的地址而无法使用。你需要手动在 PowerShell 里设置这两个环境变量。</p>
+            </div>
+            
+            <div class="content-section">
+                <h2>🛠️ 如何为 PowerShell 配置代理</h2>
+                
+                <h3>1. 找到你的 v2raYN 代理端口</h3>
+                <p>首先，你需要确认 v2raYN 正在使用的端口号。通常：</p>
+                <ul>
+                    <li><strong>HTTP 代理端口</strong>：默认为 <code>10809</code></li>
+                    <li><strong>SOCKS5 代理端口</strong>：默认为 <code>10808</code></li>
+                </ul>
+                <p>为了确保无误，你可以查看 v2raYN 的<strong>参数设置</strong>，或者直接查看其核心配置文件夹中的 <code>config.json</code> 文件来确认端口。</p>
+                
+                <h3>2. 在 PowerShell 中设置环境变量（临时生效）</h3>
+                <p>打开你的 PowerShell 窗口，复制并粘贴以下命令后按回车。这种方式设置的代理<strong>只在当前窗口有效</strong>，窗口关闭后失效，非常适合临时使用。</p>
+                
+                <div class="code-block">
+                    <pre><code>$env:http_proxy="http://127.0.0.1:10809"
+$env:https_proxy="http://127.0.0.1:10809"</code></pre>
+                </div>
+                
+                <div class="tip-box">
+                    <strong>💡 提示：</strong>如果你的 v2raYN 配置的 HTTP 端口不是 <code>10809</code>，请将命令中的端口号替换成你自己的。
+                </div>
+                
+                <h3>3. 验证代理是否生效</h3>
+                <p>设置完成后，可以在同一个 PowerShell 窗口中运行以下命令来测试：</p>
+                
+                <div class="code-block">
+                    <pre><code>curl.exe https://ipinfo.io</code></pre>
+                </div>
+                
+                <p>如果返回的 IP 地址是你代理服务器的 IP，而不是你本地的宽带 IP，那就说明配置成功了。你也可以用 <code>Invoke-WebRequest</code> 命令测试：</p>
+                
+                <div class="code-block">
+                    <pre><code>Invoke-WebRequest -Uri https://ipinfo.io -UseBasicParsing</code></pre>
+                </div>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 注意：</strong>不要用 <code>ping</code> 命令来测试，因为它使用的是 ICMP 协议，不走 HTTP/SOCKS 代理，所以永远测试不出来。
+                </div>
+                
+                <h3>4. （可选）让配置永久生效</h3>
+                <p>如果你希望每次打开 PowerShell 都能自动使用代理，可以将代理信息添加到系统的环境变量里。</p>
+                
+                <h4>方法一：PowerShell 命令（推荐）</h4>
+                <p>以管理员身份打开 PowerShell，运行以下命令。设置后，<strong>需要重启 PowerShell 窗口才能生效</strong>。</p>
+                
+                <div class="code-block">
+                    <pre><code>[Environment]::SetEnvironmentVariable("HTTP_PROXY", "http://127.0.0.1:10809", "User")
+[Environment]::SetEnvironmentVariable("HTTPS_PROXY", "http://127.0.0.1:10809", "User")</code></pre>
+                </div>
+                
+                <h4>方法二：图形界面</h4>
+                <ol>
+                    <li>按下 <code>Win + R</code> 键，输入 <code>sysdm.cpl</code> 并回车。</li>
+                    <li>点击"高级"选项卡 → "环境变量"。</li>
+                    <li>在"用户变量"中，点击"新建"，分别创建变量名为 <code>HTTP_PROXY</code> 和 <code>HTTPS_PROXY</code>，变量值都设为 <code>http://127.0.0.1:10809</code>。</li>
+                </ol>
+            </div>
+            
+            <div class="content-section">
+                <h2>👋 如何取消代理设置</h2>
+                <p>当你不再需要使用代理时，记得及时取消，以免影响访问内网或本地服务。</p>
+                
+                <h3>临时取消（当前窗口）</h3>
+                <div class="code-block">
+                    <pre><code>Remove-Item Env:http_proxy
+Remove-Item Env:https_proxy</code></pre>
+                </div>
+                
+                <h3>永久取消</h3>
+                <p>通过系统环境变量设置的，需要重新打开环境变量编辑界面，手动删除你之前添加的 <code>HTTP_PROXY</code> 和 <code>HTTPS_PROXY</code> 变量。</p>
+            </div>
+            
+            <div class="content-section">
+                <h2>📋 快速参考表</h2>
+                <table class="ref-table">
+                    <thead>
+                        <tr>
+                            <th>操作</th>
+                            <th>命令</th>
+                            <th>生效范围</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>设置临时代理</td>
+                            <td><code>$env:http_proxy="http://127.0.0.1:10809"</code></td>
+                            <td>当前窗口</td>
+                        </tr>
+                            <td>验证代理</td>
+                            <td><code>curl.exe https://ipinfo.io</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>取消临时代理</td>
+                            <td><code>Remove-Item Env:http_proxy</code></td>
+                            <td>当前窗口</td>
+                        </tr>
+                        <tr>
+                            <td>设置永久代理</td>
+                            <td><code>[Environment]::SetEnvironmentVariable(...)</code></td>
+                            <td>用户级（需重启窗口）</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <footer class="page-footer">
+                <p>本指南由 OpenClaw 社区维护 | 最后更新：2026-03-15</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>
