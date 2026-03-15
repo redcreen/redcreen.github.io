@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026-03-15 - 学习日记</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 左侧导航 */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin: 4px 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .nav-link.active {
+            background: #f0f7ff;
+            color: #1890ff;
+            border-left-color: #1890ff;
+            font-weight: 500;
+        }
+
+        .nav-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* 右侧内容区 */
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 48px;
+            max-width: 900px;
+        }
+
+        .diary-header {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .diary-date {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .diary-subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+        }
+
+        .section h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            color: #444;
+            margin: 24px 0 12px;
+        }
+
+        .section p {
+            margin-bottom: 12px;
+            color: #555;
+        }
+
+        .section ul {
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+
+        .section li {
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .highlight-box {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .warning-box {
+            background: #fff7e6;
+            border: 1px solid #ffd591;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .code-block {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #e6f7ff;
+            color: #1890ff;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #f0f0f0;
+            color: #999;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧导航 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h1>📚 学习日记</h1>
+                    <p>OpenClaw 使用记录</p>
+                </a>
+            </div>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="2026-03-10.html" class="nav-link">
+                        2026-03-10
+                        <div class="nav-date">初次安装与探索</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-11.html" class="nav-link">
+                        2026-03-11
+                        <div class="nav-date">微信集成与飞书对接</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-12.html" class="nav-link">
+                        2026-03-12
+                        <div class="nav-date">GitHub Pages 部署</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-13.html" class="nav-link">
+                        2026-03-13
+                        <div class="nav-date">记忆系统折腾</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-14.html" class="nav-link">
+                        2026-03-14
+                        <div class="nav-date">聚水潭预入库单自动化</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-15.html" class="nav-link active">
+                        2026-03-15
+                        <div class="nav-date">Memory系统深度反思</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 右侧内容 -->
+        <main class="content">
+            <div class="diary-header">
+                <div class="diary-date">2026-03-15</div>
+                <div class="diary-subtitle">Memory系统深度反思与Skill完善</div>
+                <div style="margin-top: 12px;">
+                    <span class="tag">#memory</span>
+                    <span class="tag">#skill</span>
+                    <span class="tag">#反思</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🧠 Memory系统问题深度分析</h2>
+                
+                <h3>问题现状</h3>
+                <p>今天深入思考了 memory 系统的问题：</p>
+                <ul>
+                    <li><strong>LCM (Lossless Context Management) 的局限</strong> - 虽然使用了 lossless 模式，但遗忘依然是很大的问题</li>
+                    <li><strong>跨会话记忆丢失严重</strong> - 每次重启后，之前的对话上下文基本丢失</li>
+                    <li><strong>临时解决方案不够优雅</strong> - 在 Python 脚本中加入硬编码提醒，像是用创可贴贴骨折</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>核心痛点：</strong>目前的记忆方案像是"用文件系统弥补会话记忆的不足"，虽然能工作，但不够优雅。
+                </div>
+
+                <h3>下一步探索方向</h3>
+                <ul>
+                    <li>深入研究 OpenClaw LCM 的工作机制</li>
+                    <li>了解 summary 的生成逻辑和压缩策略</li>
+                    <li>探索是否有更可靠的记忆持久化方案</li>
+                    <li>考虑外部记忆系统（如 mem0、向量数据库）的集成</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>✅ 今日完成</h2>
+                
+                <h3>1. 聚水潭 ERP Skill 完成</h3>
+                <ul>
+                    <li>创建了 <code>skills/jushuitan-erp/</code> Skill</li>
+                    <li>整合了所有相关脚本（查询、创建、管理等）</li>
+                    <li>已安装并可用</li>
+                </ul>
+
+                <h3>2. 熊桂东入库单创建成功</h3>
+                <div class="highlight-box">
+                    <ul>
+                        <li>外部单号: XGD_20260315110330</li>
+                        <li>采购单号: 241695</li>
+                        <li>供应商: 江西熊贵东 (ID: 31801923)</li>
+                        <li>商品: 黄色回头马110 + 红色回头马210 + 蓝色正头马310 = 630个</li>
+                        <li>预约到货: 2026-03-16 14:00</li>
+                    </ul>
+                </div>
+
+                <h3>3. 学习日记自动化同步</h3>
+                <ul>
+                    <li>创建了导航栏自动更新脚本 <code>scripts/update_study_nav.py</code></li>
+                    <li>创建了一键同步脚本 <code>scripts/sync_study_diary.py</code></li>
+                    <li>更新了 MEMORY.md 自动化规则</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>💡 今日感悟</h2>
+                
+                <div class="highlight-box">
+                    <p><strong>记忆不是奢侈品，是必需品。</strong>但好的记忆系统不应该依赖人工提醒，而应该是自动、透明、可靠的。</p>
+                </div>
+
+                <p>目前的方案虽然能工作，但本质上是"用文件系统打补丁"。需要找到一个更根本的解决方案。</p>
+
+                <h3>关于确认机制的思考</h3>
+                <p>在入库单流程中建立的"查询 → 展示 → 确认"机制，其实也是一种"记忆补偿"：</p>
+                <ul>
+                    <li>因为不确定 AI 是否记住了正确的供应商ID</li>
+                    <li>因为不确定 AI 是否记住了正确的SKU编码</li>
+                    <li>所以必须每次都查询、都确认</li>
+                </ul>
+                <p>这种机制虽然安全，但效率不高。理想的记忆系统应该让 AI 真正"记住"这些映射关系。</p>
+            </div>
+
+            <div class="section">
+                <h2>📋 待办事项</h2>
+                <ul>
+                    <li>[ ] 深入研究 OpenClaw LCM 工作机制</li>
+                    <li>[ ] 为王小小创建预约入库单（遗留任务）</li>
+                    <li>[ ] 确认蔡总、王升水是否创建新供应商</li>
+                    <li>[ ] 探索外部记忆系统集成方案</li>
+                </ul>
+            </div>
+
+            <div class="footer">
+                记录时间：2026-03-15 12:35 | 记录者：三德子
+            </div>
+        </main>
+    </div>
+</body>
+</html>
