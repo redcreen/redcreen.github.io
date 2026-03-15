@@ -268,14 +268,24 @@ result = smart.create_appointment(
 ### 学习日记同步 GitHub
 - **触发条件**: 每次更新学习日记后
 - **自动操作**:
-  1. 提交到 GitHub 仓库
-  2. 更新导航栏链接（检查所有日期文件）
+  1. 运行 `py scripts/sync_study_diary.py` 一键同步
+  2. 自动更新导航栏链接（扫描所有日期文件）
+  3. 提交并推送到 GitHub
+- **手动命令**:
+  ```bash
+  py scripts/sync_study_diary.py
+  ```
 - **状态**: ✅ 已配置
 
 ### 记忆文件更新
 - **每日日志**: `memory/YYYY-MM-DD.md` - 自动记录当天对话
 - **学习日记**: `memory/YYYY-MM-DD-study.md` - 记录学习和思考
 - **长期记忆**: `MEMORY.md` - 精华萃取和待办追踪
+
+### 导航栏更新脚本
+- **脚本位置**: `scripts/update_study_nav.py`
+- **功能**: 扫描 memory 目录，自动生成导航栏
+- **输出**: 更新 README.md 中的 `<!-- STUDY_DIARY_NAV_START -->` 区域
 
 ---
 
