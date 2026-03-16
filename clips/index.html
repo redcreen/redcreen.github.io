@@ -3,177 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文章剪辑 - Clips</title>
+    <title>我的转载收藏</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            color: #1d1d1f;
-        }
-        
-        .container {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
             max-width: 900px;
             margin: 0 auto;
-            padding: 60px 20px;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-        
-        .header h1 {
-            font-size: 42px;
-            font-weight: 700;
-            margin-bottom: 12px;
+            padding: 40px 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            min-height: 100vh;
         }
-        
-        .header p {
-            color: #86868b;
-            font-size: 17px;
-        }
-        
-        .clips-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .clip-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
+        .container {
+            background: white;
             border-radius: 20px;
-            padding: 28px 32px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            align-items: center;
-            gap: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-        
-        .clip-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #1a1a1a;
         }
-        
-        .clip-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
         }
-        
-        .clip-icon svg {
-            width: 28px;
-            height: 28px;
-            color: white;
+        .clip-list {
+            list-style: none;
         }
-        
-        .clip-content {
-            flex: 1;
+        .clip-item {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
         }
-        
+        .clip-item:hover {
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .clip-item:last-child {
+            border-bottom: none;
+        }
         .clip-title {
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 600;
-            color: #1d1d1f;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
-        
+        .clip-title a {
+            color: #333;
+            text-decoration: none;
+        }
+        .clip-title a:hover {
+            color: #667eea;
+        }
         .clip-meta {
+            font-size: 13px;
+            color: #888;
+        }
+        .clip-meta a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .clip-meta a:hover {
+            text-decoration: underline;
+        }
+        .badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-right: 8px;
+        }
+        .badge-v2 {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        .count {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 14px;
-            color: #86868b;
-        }
-        
-        .clip-arrow {
-            width: 24px;
-            height: 24px;
-            color: #c7c7cc;
-            transition: color 0.2s;
-        }
-        
-        .clip-card:hover .clip-arrow {
-            color: #007aff;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-            color: #86868b;
-        }
-        
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 40px 16px;
-            }
-            
-            .header h1 {
-                font-size: 32px;
-            }
-            
-            .clip-card {
-                padding: 20px 24px;
-            }
-            
-            .clip-icon {
-                width: 48px;
-                height: 48px;
-                border-radius: 12px;
-            }
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1>📄 Clips</h1>
-            <p>收藏的文章和精彩内容</p>
-        </header>
+        <h1>📚 我的转载收藏</h1>
+        <p class="subtitle">通过 Web Clipper 抓取的文章集合 <span class="count">2</span></p>
         
-        <div class="clips-list">
-            <a href="openclaw-tesla-story-v2/index.html" class="clip-card">
-                <div class="clip-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                        <polyline points="10 9 9 9 8 9"></polyline>
-                    </svg>
+        <ul class="clip-list">
+            <li class="clip-item">
+                <div class="clip-title"><a href="openclaw-tesla-story-v2/">如何用OpenClaw一个月赚到特斯拉（全路径复盘）</a></div>
+                <div class="clip-meta">
+                    <span class="badge badge-v2">✨ 优化版</span>
+                    <span class="badge">X</span>
+                    <span>👤 OneHopeA9 (@onehopeA9)</span>
+                    <span style="margin-left: 15px;">📅 2026-03-14</span>
+                    <span style="margin-left: 15px;">👁️ 90.7万查看</span>
+                    <br><br>
+                    <span style="color: #388e3c;">✅ 包含本地保存的图片</span>
                 </div>
-                <div class="clip-content">
-                    <div class="clip-title">如何用OpenClaw一个月赚到特斯拉（全路径复盘）</div>
-                    <div class="clip-meta">OneHopeA9 · 2026年3月14日 · 90.6万查看</div>
+            </li>
+            <li class="clip-item">
+                <div class="clip-title"><a href="openclaw-tesla-story/">如何用OpenClaw一个月赚到特斯拉（全路径复盘）- 原版</a></div>
+                <div class="clip-meta">
+                    <span class="badge">X</span>
+                    <span>👤 OneHopeA9 (@onehopeA9)</span>
+                    <span style="margin-left: 15px;">📅 2026-03-14</span>
+                    <span style="margin-left: 15px;">👁️ 90.4万查看</span>
+                    <br><br>
+                    <span style="color: #999;">📄 截图版</span>
                 </div>
-                <svg class="clip-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </a>
-        </div>
+            </li>
+        </ul>
     </div>
 </body>
 </html>
