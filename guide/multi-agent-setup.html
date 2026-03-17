@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw 多 Agent 搭建指南 - 让 AI 团队协作起来</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧导航栏 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🐾</span>
+                    <span class="logo-text">OpenClaw</span>
+                </div>
+                <p class="tagline">完全指南</p>
+            </div>
+            
+            <div class="nav-section">
+                <h3>基础概念</h3>
+                <ul>
+                    <li><a href="index.html">📖 概述</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>核心功能</h3>
+                <ul>
+                    <li><a href="multi-agent.html">🧠 多实例架构</a></li>
+                    <li><a href="task-execution.html">⚡ 任务执行机制</a></li>
+                    <li><a href="multi-agent-setup.html" class="active">👥 多 Agent 搭建指南</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>配置指南</h3>
+                <ul>
+                    <li><a href="config.html">🔧 配置文件详解</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>资源推荐</h3>
+                <ul>
+                    <li><a href="popular-skills.html">⭐ 最受欢迎的 Skills</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-footer">
+                <p>持续更新中...</p>
+            </div>
+        </nav>
+        
+        <!-- 主内容区 -->
+        <main class="content">
+            <article class="post">
+                <header class="post-header">
+                    <div class="post-meta-top">
+                        <span class="post-category">进阶教程</span>
+                        <span class="post-date">转载于 2026-03-05</span>
+                    </div>
+                    <h1 class="post-title">OpenClaw 多 Agent 搭建指南：让 AI 团队协作起来</h1>
+                    <p class="post-source">原文来源：<a href="https://www.heyuan110.com/zh/posts/ai/2026-03-05-openclaw-multi-agent-setup/" target="_blank">heyuan110.com</a></p>
+                </header>
+                
+                <div class="post-content">
+                    <div class="post-intro">
+                        <p>你搭了一个 OpenClaw 私人助手，它帮你处理 Telegram 消息、搜索网页、写草稿、审代码，一切都很顺。</p>
+                        <p>直到问题来了——你让它调研一个竞品，它却把昨天写代码时的上下文混了进来。你让它写篇文章，它又从一个完全不相干的项目里拉出调试记录。单个 Agent 被不断膨胀的记忆淹没了，响应越来越慢，结果越来越离谱。</p>
+                        <p><strong>解决办法不是写更好的提示词，而是组建团队。</strong></p>
+                    </div>
+
+                    <h2>你一定会撞上的三面墙</h2>
+                    <p>大多数人一开始都只用一个 Agent 干所有事。第一周没问题，之后三个问题就冒出来了：</p>
+                    
+                    <table class="problem-table">
+                        <thead>
+                            <tr>
+                                <th>问题</th>
+                                <th>表现</th>
+                                <th>根本原因</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>记忆膨胀</td>
+                                <td>响应越来越慢</td>
+                                <td>记忆文件无限增长，每次对话都加载全部历史</td>
+                            </tr>
+                            <tr>
+                                <td>上下文污染</td>
+                                <td>回答跨领域"串味"</td>
+                                <td>写作建议混进代码审查，调研数据污染创意输出</td>
+                            </tr>
+                            <tr>
+                                <td>成本爆炸</td>
+                                <td>Token 用量远超预期</td>
+                                <td>每次 API 调用都带着大量无关的背景上下文</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>多 Agent 的核心理念</h2>
+                    <p>道理很简单：<strong>专人做专事。</strong></p>
+                    <ul>
+                        <li><strong>写作 Agent：</strong>只关注写作技巧、风格规范、内容模板</li>
+                        <li><strong>编码 Agent：</strong>只关注项目代码、技术文档、调试流程</li>
+                        <li><strong>研究 Agent：</strong>只关注搜索工具、数据来源、信息整合</li>
+                    </ul>
+                    <p>每个 Agent 有自己的大脑（记忆）、自己的办公室（工作区）、自己的日志（会话历史），互不干扰。</p>
+
+                    <h2>OpenClaw 多 Agent 架构总览</h2>
+                    
+                    <h3>三层隔离</h3>
+                    <p>在 OpenClaw 里，每个 Agent 不只是一个名字，而是一个物理隔离的独立虚拟工作者：</p>
+                    
+                    <div class="code-block">
+                        <pre><code>~/.openclaw/agents/&lt;agentId&gt;/
+├── agent/                 # 身份层
+│   ├── auth-profiles.json # API 密钥配置
+│   └── models.json        # 模型选择
+└── sessions/              # 状态层
+    ├── &lt;session-id&gt;.jsonl # 独立聊天记录
+    └── sessions.json      # 会话索引
+
+~/.openclaw/workspace-&lt;agentId&gt;/
+├── SOUL.md       # 人格定义
+├── AGENTS.md     # 行为规则
+├── USER.md       # 用户画像
+├── PROMPT.md     # 提示词模板
+├── IDENTITY.md   # 身份定义
+└── memory/       # 记忆存储</code></pre>
+                    </div>
+
+                    <table class="layer-table">
+                        <thead>
+                            <tr>
+                                <th>层级</th>
+                                <th>目录</th>
+                                <th>用途</th>
+                                <th>类比</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>身份层</td>
+                                <td><code>agents/&lt;id&gt;/agent/</code></td>
+                                <td>用哪个模型、哪把 API Key</td>
+                                <td>工牌</td>
+                            </tr>
+                            <tr>
+                                <td>状态层</td>
+                                <td><code>agents/&lt;id&gt;/sessions/</code></td>
+                                <td>独立的聊天记录和路由状态</td>
+                                <td>工作日志</td>
+                            </tr>
+                            <tr>
+                                <td>工作区</td>
+                                <td><code>workspace-&lt;id&gt;/</code></td>
+                                <td>独立的文件、提示词、记忆</td>
+                                <td>独立办公室</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>手把手搭建你的第一个多 Agent 团队</h2>
+                    
+                    <h3>第 1 步：创建 Agent</h3>
+                    <div class="code-block">
+                        <pre><code># 创建写作 Agent，使用 DeepSeek（性价比高）
+openclaw agents add writer \
+  --model deepseek/deepseek-chat \
+  --workspace ~/.openclaw/workspace-writer
+
+# 创建研究 Agent，使用 GPT-4o（擅长联网搜索和信息综合）
+openclaw agents add researcher \
+  --model openai/gpt-4o \
+  --workspace ~/.openclaw/workspace-researcher
+
+# 创建编码 Agent，使用 Claude（代码理解最强）
+openclaw agents add coder \
+  --model anthropic/claude-sonnet-4-6 \
+  --workspace ~/.openclaw/workspace-coder</code></pre>
+                    </div>
+
+                    <h3>第 2 步：定义每个 Agent 的灵魂</h3>
+                    <p>创建 Agent 给了它躯体，灵魂来自工作区文件。</p>
+                    
+                    <p><strong>SOUL.md —— 人格与专长：</strong></p>
+                    <div class="code-block">
+                        <pre><code># Writer Agent
+
+## 角色
+你是一名资深技术内容写手。你的专长是把复杂的技术话题
+变成清晰、有吸引力的文章。
+
+## 风格
+- 每篇文章用一个贴近生活的场景或反直觉的观点开头
+- 段落要短——适合手机阅读
+- 用类比解释复杂概念
+- 结尾有明确的行动号召
+
+## 边界
+- 不用"不言而喻""众所周知"之类的废话
+- 每个技术术语首次出现时解释清楚
+- 守好自己的领地——不写代码，不做调研</code></pre>
+                    </div>
+
+                    <h3>第 3 步：绑定 Agent 到消息频道</h3>
+                    <p>将 Agent 连接到特定的群组或聊天。OpenClaw 支持 Telegram、飞书/Lark、Discord、WhatsApp 等平台。</p>
+                    
+                    <div class="code-block">
+                        <pre><code>{
+  "bindings": [
+    {
+      "agentId": "writer",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-1001234567890"
+        }
+      }
+    },
+    {
+      "agentId": "researcher",
+      "match": {
+        "channel": "telegram",
+        "peer": {
+          "kind": "group",
+          "id": "-1009876543210"
+        }
+      }
+    }
+  ]
+}</code></pre>
+                    </div>
+
+                    <h2>四种协作模式</h2>
+                    
+                    <h3>1. Pipeline 模式（流水线）</h3>
+                    <div class="diagram">
+                        <p>用户请求 → Researcher → Writer → Reviewer → 最终输出</p>
+                    </div>
+                    <p>任务按顺序流转，每个 Agent 的输出作为下一个 Agent 的输入，像工厂流水线。</p>
+                    <p><strong>适合场景：</strong>内容生产（调研 → 写作 → 审核）、代码开发（设计 → 实现 → 测试）</p>
+
+                    <h3>2. Parallel 模式（并行）</h3>
+                    <p>一个任务拆分为互不依赖的子任务，多个 Agent 同时执行，最后汇总结果。</p>
+                    <p><strong>适合场景：</strong>竞品分析（每个 Agent 调研一个竞争对手）、多视角审查、多语言翻译</p>
+
+                    <h3>3. Supervisor 模式（主管）</h3>
+                    <p>一个中央 Supervisor 接收所有请求，拆分子任务，分配给专家，审核结果，交付汇总输出。</p>
+                    <p><strong>适合场景：</strong>单入口的个人助手、需要跨领域协作的任务、需要质量把控的场景</p>
+
+                    <h3>4. Swarm 模式（蜂群）</h3>
+                    <p>没有中央协调者。Agent 之间点对点通信，自组织，根据自身判断进行任务交接。</p>
+                    <p><strong>适合场景：</strong>复杂、不可预测的工作流，自治团队</p>
+
+                    <h2>性能优化与成本管理</h2>
+                    
+                    <h3>按任务选模型</h3>
+                    <table class="model-table">
+                        <thead>
+                            <tr>
+                                <th>任务类型</th>
+                                <th>推荐模型</th>
+                                <th>大致成本</th>
+                                <th>理由</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>简单路由/分发</td>
+                                <td>任意小模型</td>
+                                <td>最低</td>
+                                <td>Supervisor 只需要分类和转发</td>
+                            </tr>
+                            <tr>
+                                <td>调研 + 综合</td>
+                                <td>gpt-4o</td>
+                                <td>中等</td>
+                                <td>擅长浏览和信息融合</td>
+                            </tr>
+                            <tr>
+                                <td>长文写作</td>
+                                <td>deepseek-chat</td>
+                                <td>低</td>
+                                <td>性价比一流</td>
+                            </tr>
+                            <tr>
+                                <td>代码生成</td>
+                                <td>claude-sonnet</td>
+                                <td>中高</td>
+                                <td>代码理解和生成最强</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>常见坑点与避免方法</h2>
+                    
+                    <div class="warning-box">
+                        <h4>坑 1：Agent 太多</h4>
+                        <p>一上来就建 10 个 Agent"以备不时之需"，结果通信开销大、管理复杂。</p>
+                        <p><strong>经验法则：</strong>个人使用 3-5 个 Agent，团队使用每条业务线 2-3 个。</p>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>坑 2：循环分派</h4>
+                        <p>Agent A 分派给 Agent B，Agent B 又分派回 Agent A。无限循环，疯狂烧 Token。</p>
+                        <p><strong>解决：</strong>只有 Supervisor 才能分派任务，专家 Agent 应该把结果返回给 Supervisor。</p>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>坑 3：Agent 间通信没有格式规范</h4>
+                        <p>Agent A 给 Agent B 发了一大段口语化的回复，Agent B 理解偏了。</p>
+                        <p><strong>解决：</strong>在每个 Agent 的 AGENTS.md 中定义通信模板，使用结构化数据。</p>
+                    </div>
+
+                    <h2>总结</h2>
+                    <p>多 Agent 架构和管理真实团队的原则一样：</p>
+                    <ul>
+                        <li><strong>招对人</strong>——用合适的模型创建合适的 Agent</li>
+                        <li><strong>定好岗</strong>——用 SOUL.md 和 AGENTS.md 明确边界</li>
+                        <li><strong>通好渠</strong>——配置绑定并开启 Agent 间通信</li>
+                        <li><strong>管好队</strong>——设一个 main Agent 做质量把控和协调</li>
+                    </ul>
+                    <p>从一个 Supervisor 加两个专家 Agent 开始，遇到具体瓶颈再加。目标不是 Agent 越多越好，而是让对的 Agent 做对的事。</p>
+
+                    <div class="post-footer">
+                        <p>如果你发现自己不断对 AI 助手说"忽略那个，专注这个"——是时候拆分成多个 Agent 了。</p>
+                    </div>
+                </div>
+            </article>
+            
+            <footer class="page-footer">
+                <p>本指南由 OpenClaw 社区维护 | 最后更新：2026-03-17</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>
