@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多 Agent vs 多 Subagent - OpenClaw 完全指南</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧导航栏 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🐾</span>
+                    <span class="logo-text">OpenClaw</span>
+                </div>
+                <p class="tagline">完全指南</p>
+            </div>
+            
+            <div class="nav-section">
+                <h3>基础概念</h3>
+                <ul>
+                    <li><a href="index.html">📖 概述</a></li>
+                    <li><a href="quickstart.html">🚀 快速上手</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>核心功能</h3>
+                <ul>
+                    <li><a href="multi-agent.html">🧠 多实例架构</a></li>
+                    <li><a href="task-execution.html">⚡ 任务执行机制</a></li>
+                    <li><a href="multi-agent-setup.html">👥 多 Agent 搭建指南</a></li>
+                    <li><a href="multi-agent-practice.html">🛠️ 多 Agent 最佳实践</a></li>
+                    <li><a href="agent-vs-subagent.html" class="active">🔀 Agent vs Subagent</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>配置指南</h3>
+                <ul>
+                    <li><a href="config.html">🔧 配置文件详解</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>资源推荐</h3>
+                <ul>
+                    <li><a href="popular-skills.html">⭐ 最受欢迎的 Skills</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-footer">
+                <p>持续更新中...</p>
+            </div>
+        </nav>
+        
+        <!-- 主内容区 -->
+        <main class="content">
+            <article class="article-page">
+                <header class="article-header">
+                    <div class="article-meta">
+                        <span class="article-category">核心概念</span>
+                        <span class="article-date">2026-03-17</span>
+                    </div>
+                    <h1>🔀 多 Agent vs 多 Subagent：核心区别详解</h1>
+                    <p class="article-subtitle">理解两种架构模式的本质差异，选择适合你场景的解决方案</p>
+                </header>
+
+                <div class="article-intro">
+                    <p>在 OpenClaw 框架中，"多 Agent"和"多 Subagent"虽然听起来相似，但实际上是两种解决不同问题的架构模式。简单来说，<strong>"多 Agent"指的是多个各自独立的"常驻专家"，而"多 Subagent"指的是由一个"主管"临时派发的"项目临时工"</strong>。</p>
+                </div>
+
+                <div class="article-section">
+                    <h2>📊 核心区别对比表</h2>
+                    <div class="table-container">
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>维度</th>
+                                    <th>多 Agent (Persistent Agents)</th>
+                                    <th>多 Subagent (Sub-agents)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>一句话类比</strong></td>
+                                    <td>公司里几个不同部门的<strong>常驻同事</strong>，各自有独立办公室，你可以随时找他们中的任何一个</td>
+                                    <td>你的<strong>个人助理</strong>为你的一项紧急任务，临时招募几个<strong>自由职业者</strong>，任务结束合作就终止</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>核心定义</strong></td>
+                                    <td>独立存在的"常驻角色"，在系统中长期运行，有自己专属的配置、工作区 (<code>workspace</code>)、记忆和工具权限</td>
+                                    <td>从主 Agent 的会话中临时派生的"任务型角色"，由主 Agent 动态创建，执行完特定任务后自动归档消失</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>生命周期</strong></td>
+                                    <td><span class="badge badge-permanent">永久运行</span>。除非你手动停止或删除，否则它们会一直存在，随时待命</td>
+                                    <td><span class="badge badge-temporary">任务完成后自动结束</span>。子 Agent 的生命周期与单个任务绑定，任务结束，它的会话也随之归档</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>配置方式</strong></td>
+                                    <td>需要在 <code>openclaw.json</code> 配置文件中进行<strong>预先定义</strong>，例如指定 <code>id</code>、<code>workspace</code>、<code>model</code> 等</td>
+                                    <td>通常<strong>无需预先配置</strong>。由主 Agent 在运行时通过 <code>sessions_spawn</code> 命令动态创建，并可临时指定模型等参数</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>适用场景</strong></td>
+                                    <td>
+                                        <ul>
+                                            <li><strong>多身份/多角色</strong>：用一个 Agent 处理工作，另一个处理个人事务</li>
+                                            <li><strong>多租户隔离</strong>：为不同客户或群组分配完全隔离的 Agent</li>
+                                            <li><strong>长期值守任务</strong>：如一个 Agent 专门负责收集资讯，另一个负责定时发送报告</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li><strong>复杂任务拆解</strong>：主 Agent 将一个大任务拆解为多个并行小任务，交给不同的子 Agent 同时执行</li>
+                                            <li><strong>成本优化</strong>：主 Agent 使用强大的高价模型做决策，子 Agent 使用廉价模型做具体的"体力活"</li>
+                                            <li><strong>上下文隔离</strong>：让子 Agent 在干净的上下文中专注执行，避免主会话的历史信息干扰</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>通信与协作</strong></td>
+                                    <td>通过 <code>sessions_send</code> 工具进行"会话间通信"，就像两个独立的"人"在互相发消息</td>
+                                    <td>由主 Agent 通过 <code>sessions_spawn</code> 工具派发任务，子 Agent 执行完毕后将结果汇报给主 Agent</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="article-section">
+                    <h2>💡 如何选择？</h2>
+                    <p>根据你的具体需求，可以这样判断：</p>
+                    
+                    <div class="decision-cards">
+                        <div class="decision-card">
+                            <div class="decision-icon">👤</div>
+                            <h3>个人用户，提高复杂任务效率</h3>
+                            <p>可以先用"<strong>1 个主 Agent + 多个 Subagent</strong>"的模式。把主 Agent 当作你的项目经理，由它去调度多个"临时工" Subagent 并行干活，这样架构简单、易于控制，也更省钱。</p>
+                        </div>
+                        <div class="decision-card">
+                            <div class="decision-icon">👥</div>
+                            <h3>多人共用，需要严格隔离</h3>
+                            <p>如果你的需求涉及多人共用、需要严格的身份或权限隔离，例如，你想让一个"客服 Bot"和一个"内部研发 Bot"拥有完全不同的权限和对话历史，那么就应该配置<strong>多个独立的持久化 Agent</strong>。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-section">
+                    <h2>⚠️ 特别注意</h2>
+                    <p>在实际配置时，有几个容易踩的坑需要留意：</p>
+                    
+                    <div class="warning-box">
+                        <h4>1. <code>allowAgents</code> 白名单位置</h4>
+                        <p>主 Agent 要调用哪些 Subagent，需要在配置文件的 <code>agents.list</code> 下具体的 Agent 条目中设置 <code>subagents.allowAgents</code>，<strong>不能</strong>放在 <code>agents.defaults</code> 全局默认值里，否则会导致网关启动失败。</p>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <h4>2. 功能冲突</h4>
+                        <p><code>sessions_spawn</code> (子 Agent 功能) 和 <code>agentToAgent.enabled: true</code> (持久 Agent 间通信) <strong>目前不能同时启用</strong>。如果同时开启，会导致子 Agent 创建后无法执行。你需要根据主要需求二选一。</p>
+                    </div>
+                </div>
+
+                <div class="article-footer">
+                    <p>希望这个解释能帮你理清思路。如果你已经有了具体的应用场景，不妨告诉我，我可以帮你看看哪种模式更适合你。</p>
+                </div>
+            </article>
+
+            <footer class="page-footer">
+                <p>本指南由 OpenClaw 社区维护 | 最后更新：2026-03-17</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>
