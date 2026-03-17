@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026-03-17 - 学习日记</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 左侧导航 */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin: 4px 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .nav-link.active {
+            background: #f0f7ff;
+            color: #1890ff;
+            border-left-color: #1890ff;
+            font-weight: 500;
+        }
+
+        .nav-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* 右侧内容区 */
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 48px;
+            max-width: 900px;
+        }
+
+        .diary-header {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .diary-date {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .diary-subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f0f0f0;
+        }
+
+        .section h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            color: #444;
+            margin: 24px 0 12px;
+        }
+
+        .section p {
+            margin-bottom: 12px;
+            color: #555;
+        }
+
+        .section ul {
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+
+        .section li {
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .highlight-box {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .warning-box {
+            background: #fff7e6;
+            border: 1px solid #ffd591;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .code-block {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #e6f7ff;
+            color: #1890ff;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #f0f0f0;
+            color: #999;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧导航 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h1>📚 学习日记</h1>
+                    <p>OpenClaw 使用记录</p>
+                </a>
+            </div>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="2026-03-10.html" class="nav-link">
+                        2026-03-10
+                        <div class="nav-date">初次安装与探索</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-11.html" class="nav-link">
+                        2026-03-11
+                        <div class="nav-date">微信集成与飞书对接</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-12.html" class="nav-link">
+                        2026-03-12
+                        <div class="nav-date">GitHub Pages 部署</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-13.html" class="nav-link">
+                        2026-03-13
+                        <div class="nav-date">记忆系统折腾</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-14.html" class="nav-link">
+                        2026-03-14
+                        <div class="nav-date">聚水潭预入库单自动化</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-15.html" class="nav-link">
+                        2026-03-15
+                        <div class="nav-date">Memory系统深度反思</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-16.html" class="nav-link">
+                        2026-03-16
+                        <div class="nav-date">AI产业赋能平台BP制作</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="2026-03-17.html" class="nav-link active">
+                        2026-03-17
+                        <div class="nav-date">OpenClaw指南完善</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 右侧内容 -->
+        <main class="content">
+            <div class="diary-header">
+                <div class="diary-date">2026-03-17</div>
+                <div class="diary-subtitle">OpenClaw完全指南网站完善 + PPT工作流总结</div>
+                <div style="margin-top: 12px;">
+                    <span class="tag">#OpenClaw</span>
+                    <span class="tag">#GitHubPages</span>
+                    <span class="tag">#PPT工作流</span>
+                    <span class="tag">#WPS</span>
+                    <span class="tag">#DeepSeek</span>
+                    <span class="tag">#Kimi</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎯 今日核心任务</h2>
+                <p>今天主要做了两件事：</p>
+                <ol>
+                    <li><strong>OpenClaw完全指南网站</strong> - 转载了掘金上的优质文章，完善了指南内容</li>
+                    <li><strong>PPT制作工作流总结</strong> - 梳理了一套高效的AI辅助PPT制作流程</li>
+                </ol>
+            </div>
+
+            <div class="section">
+                <h2>🧠 PPT制作高效工作流</h2>
+                
+                <p>今天总结了一套实用的PPT制作流程，结合了多个AI工具的优势：</p>
+                
+                <div class="highlight-box">
+                    <strong>核心流程（4步法）</strong>
+                </div>
+
+                <h3>Step 1: WPS脑图梳理框架</h3>
+                <ul>
+                    <li>将初步想法输入WPS脑图</li>
+                    <li>利用WPS AI自动扩展和完善框架</li>
+                    <li>输出结构化的思维导图大纲</li>
+                </ul>
+
+                <h3>Step 2: DeepSeek丰富内容</h3>
+                <ul>
+                    <li>将WPS脑图导出，传给DeepSeek（或其他大模型）</li>
+                    <li>与AI进行多轮对话，逐页细化内容</li>
+                    <li>调整表达方式，让内容更专业、更有深度</li>
+                </ul>
+
+                <h3>Step 3: 生成PPT大纲（MD格式）</h3>
+                <ul>
+                    <li>让DeepSeek输出Markdown格式的PPT大纲</li>
+                    <li>包含每页的标题、要点、备注等</li>
+                </ul>
+
+                <h3>Step 4: Kimi Web生成精美PPT</h3>
+                <ul>
+                    <li>将MD文件上传到<strong>Kimi Web版</strong>的PPT功能</li>
+                    <li>Kimi会自动生成设计精美的PPT</li>
+                    <li>支持多种模板风格选择</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>效果评估：</strong>通过这套流程生成的PPT质量非常高，设计美观、内容充实，远超手动制作的效率。
+                </div>
+
+                <div class="warning-box">
+                    <strong>注意事项：</strong>
+                    <ul style="margin-top: 8px;">
+                        <li>Kimi API目前<strong>不支持</strong>PPT生成功能</li>
+                        <li>可以通过Agent操作Web实现，但还不够完善</li>
+                        <li>目前最稳定的方式还是直接使用Kimi Web版</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🌐 OpenClaw指南网站更新</h2>
+                
+                <p>今天将掘金上的优质文章转载到了OpenClaw完全指南网站：</p>
+                
+                <h3>新增文章</h3>
+                <ul>
+                    <li><strong>多Agent搭建指南</strong> - 详细介绍如何在OpenClaw中配置和使用多Agent架构</li>
+                    <li><strong>多Agent最佳实践</strong> - 分享实际使用中的经验和技巧</li>
+                    <li><strong>快速上手</strong> - 新用户的入门教程</li>
+                    <li><strong>Agent vs Subagent</strong> - 对比两种架构模式的差异和适用场景</li>
+                </ul>
+
+                <h3>技术改进</h3>
+                <ul>
+                    <li>优化了文章页面的CSS样式</li>
+                    <li>新增了对比表格、决策卡片、警告框等组件</li>
+                    <li>统一了全站的视觉风格</li>
+                    <li>所有更新同步到了GitHub Pages</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>访问地址：</strong>https://redcreen.github.io/guide/
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>💡 今日收获</h2>
+                
+                <ul>
+                    <li><strong>工具链组合思维</strong> - 没有单一工具能解决所有问题，关键是找到每个环节最适合的工具</li>
+                    <li><strong>WPS脑图 + DeepSeek + Kimi</strong> - 这套组合在PPT制作场景下效率极高</li>
+                    <li><strong>内容为王</strong> - AI可以帮助排版和设计，但核心内容质量仍需人工把控</li>
+                    <li><strong>文档网站维护</strong> - 使用GitHub Pages + 自动化同步，可以高效维护技术文档</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>📋 待办事项</h2>
+                <ul>
+                    <li>[ ] 继续完善OpenClaw指南的其他章节</li>
+                    <li>[ ] 探索Kimi API的PPT生成能力（等待官方支持）</li>
+                    <li>[ ] 将PPT工作流整理成可复用的Skill</li>
+                </ul>
+            </div>
+
+            <div class="footer">
+                记录时间：2026-03-17 19:58 | 记录者：三德子
+            </div>
+        </main>
+    </div>
+</body>
+</html>
