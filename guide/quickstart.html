@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw 完全指南 - 快速上手</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧导航栏 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🐾</span>
+                    <span class="logo-text">OpenClaw</span>
+                </div>
+                <p class="tagline">完全指南</p>
+            </div>
+            
+            <div class="nav-section">
+                <h3>基础概念</h3>
+                <ul>
+                    <li><a href="index.html">📖 概述</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>核心功能</h3>
+                <ul>
+                    <li><a href="multi-agent.html">🧠 多实例架构</a></li>
+                    <li><a href="task-execution.html">⚡ 任务执行机制</a></li>
+                    <li><a href="multi-agent-setup.html">👥 多 Agent 搭建指南</a></li>
+                    <li><a href="multi-agent-practice.html">🛠️ 多 Agent 最佳实践</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>配置指南</h3>
+                <ul>
+                    <li><a href="config.html">🔧 配置文件详解</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3>资源推荐</h3>
+                <ul>
+                    <li><a href="popular-skills.html">⭐ 最受欢迎的 Skills</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-footer">
+                <p>持续更新中...</p>
+            </div>
+        </nav>
+        
+        <!-- 主内容区 -->
+        <main class="content">
+            <div class="page-header">
+                <h1>快速上手</h1>
+                <p class="subtitle">从零开始，5 分钟掌握 OpenClaw 核心概念</p>
+            </div>
+
+            <div class="intro-section">
+                <div class="intro-card">
+                    <h2>🚀 什么是 OpenClaw？</h2>
+                    <p>OpenClaw 是一个 AI 助手平台，让你可以在多个聊天渠道（Telegram、WhatsApp、Slack 等）与 AI 助手对话，并执行各种任务。</p>
+                    <ul class="feature-list">
+                        <li><span class="icon">💬</span> 支持多种聊天渠道</li>
+                        <li><span class="icon">🤖</span> 多 Agent 并行工作</li>
+                        <li><span class="icon">🔌</span> 丰富的 Skills 扩展</li>
+                        <li><span class="icon">⚡</span> 本地优先，数据自主</li>
+                    </ul>
+                </div>
+                
+                <div class="intro-card">
+                    <h2>🎯 核心架构</h2>
+                    <div class="architecture-preview">
+                        <div class="layer gateway-layer">
+                            <div class="layer-title">🌐 Gateway</div>
+                            <div class="layer-desc">消息路由与分发中心</div>
+                        </div>
+                        <div class="arrow">⬇</div>
+                        <div class="layer routing-layer">
+                            <div class="layer-title">🧭 Routing</div>
+                            <div class="layer-desc">根据规则分配给对应 Agent</div>
+                        </div>
+                        <div class="arrow">⬇</div>
+                        <div class="agents-layer">
+                            <div class="agent-box">
+                                Agent A<br><small>工作助手</small>
+                            </div>
+                            <div class="agent-box">
+                                Agent B<br><small>代码助手</small>
+                            </div>
+                            <div class="agent-box">
+                                Agent C<br><small>生活助手</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>🛠️ 安装与启动</h2>
+                
+                <h3>1. 安装</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>bash</span>
+                        <button class="copy-btn">复制</button>
+                    </div>
+                    <pre><code><span class="comment"># macOS / Linux</span>
+brew install openclaw
+
+<span class="comment"># 或使用安装脚本</span>
+curl -fsSL https://openclaw.dev/install.sh | sh</code></pre>
+                </div>
+
+                <h3>2. 初始化配置</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>bash</span>
+                        <button class="copy-btn">复制</button>
+                    </div>
+                    <pre><code><span class="comment"># 创建配置文件</span>
+openclaw init
+
+<span class="comment"># 编辑配置</span>
+openclaw config edit</code></pre>
+                </div>
+
+                <h3>3. 启动 Gateway</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>bash</span>
+                        <button class="copy-btn">复制</button>
+                    </div>
+                    <pre><code><span class="comment"># 启动服务</span>
+openclaw gateway start
+
+<span class="comment"># 或后台运行</span>
+openclaw gateway start --daemon</code></pre>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>📚 核心概念</h2>
+                
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-icon">🤖</div>
+                        <h3>Agent</h3>
+                        <p>AI 助手实例，每个 Agent 有独立的配置、记忆和工具权限</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-icon">🌐</div>
+                        <h3>Gateway</h3>
+                        <p>消息网关，负责接收各渠道消息并路由给对应 Agent</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-icon">📱</div>
+                        <h3>Channel</h3>
+                        <p>聊天渠道，如 Telegram、WhatsApp、Slack 等</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-icon">🔌</div>
+                        <h3>Skill</h3>
+                        <p>功能扩展，让 Agent 获得新能力，如查天气、发邮件等</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>🔗 快速链接</h2>
+                <div class="link-grid">
+                    <a href="multi-agent.html" class="quick-card">
+                        <div class="quick-icon">🧠</div>
+                        <h3>多实例架构</h3>
+                        <p>了解 OpenClaw 如何同时运行多个 Agent，以及它们之间的协作方式</p>
+                    </a>
+                    <a href="task-execution.html" class="quick-card">
+                        <div class="quick-icon">⚡</div>
+                        <h3>任务执行机制</h3>
+                        <p>深入理解 Agent 如何接收、处理和执行你的任务请求</p>
+                    </a>
+                    <a href="config.html" class="quick-card">
+                        <div class="quick-icon">🔧</div>
+                        <h3>配置文件详解</h3>
+                        <p>掌握 openclaw.json 的每个配置项，自定义你的 AI 助手</p>
+                    </a>
+                    <a href="popular-skills.html" class="quick-card">
+                        <div class="quick-icon">⭐</div>
+                        <h3>热门 Skills</h3>
+                        <p>发现社区最受欢迎的 Skills，扩展你的 Agent 能力</p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>💡 常用命令</h2>
+                <div class="command-grid">
+                    <div class="command-card">
+                        <code>openclaw status</code>
+                        <span>查看运行状态</span>
+                    </div>
+                    <div class="command-card">
+                        <code>openclaw agents list</code>
+                        <span>列出所有 Agent</span>
+                    </div>
+                    <div class="command-card">
+                        <code>openclaw skills list</code>
+                        <span>查看已安装 Skills</span>
+                    </div>
+                    <div class="command-card">
+                        <code>openclaw logs</code>
+                        <span>查看运行日志</span>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="page-footer">
+                <p>本指南由 OpenClaw 社区维护 | 最后更新：2026-03-17</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>
