@@ -556,6 +556,462 @@ def get_order_tool(order_id: str) -&gt; dict:
                     <blockquote><p>小而快的集成，用 function calling；<br>长期可复用的工具层，用 MCP；<br>真正落地迁移时，先包 adapter，不要先重写业务。</p></blockquote>
                     <hr>
 
+                    <h2>19. <code>tool</code> 和 <code>MCP</code> 的区别</h2>
+                    <p>最简单说：</p>
+                    <blockquote><p><code>tool</code> 是“能力本身”；<br><code>MCP</code> 是“暴露和访问这些能力的协议/标准”。</p></blockquote>
+
+                    <h3>19.1 <code>tool</code> 是什么</h3>
+                    <p>一个 tool 就是一项可调用能力，例如：</p>
+                    <ul>
+                        <li><code>get_order</code></li>
+                        <li><code>search_logs</code></li>
+                        <li><code>send_slack_message</code></li>
+                    </ul>
+                    <p>它关注的是：</p>
+                    <ul>
+                        <li>做什么</li>
+                        <li>输入是什么</li>
+                        <li>输出是什么</li>
+                    </ul>
+
+                    <h3>19.2 <code>MCP</code> 是什么</h3>
+                    <p>MCP 关注的是：</p>
+                    <ul>
+                        <li>这些能力怎么被标准化暴露出来</li>
+                        <li>AI 应用怎么发现它们</li>
+                        <li>怎么调用它们</li>
+                        <li>怎么返回结果</li>
+                    </ul>
+                    <p>所以：</p>
+                    <ul>
+                        <li><code>tool</code> 是业务能力</li>
+                        <li><code>MCP</code> 是工具接入协议</li>
+                    </ul>
+
+                    <h3>19.3 一个很实用的类比</h3>
+                    <ul>
+                        <li><code>tool</code> 像一个电器</li>
+                        <li><code>MCP</code> 像统一插座标准</li>
+                    </ul>
+                    <p>或者：</p>
+                    <ul>
+                        <li><code>tool</code> 像一个 API endpoint</li>
+                        <li><code>MCP</code> 像 API 协议和接口规范</li>
+                    </ul>
+                    <p>一句话总结：</p>
+                    <blockquote><p><code>tool</code> 回答“能做什么”；<br><code>MCP</code> 回答“这些能力怎么以统一方式被发现、调用和复用”。</p></blockquote>
+                    <hr>
+
+                    <h2>20. <code>function tool</code>、<code>MCP tool</code> 和 <code>hosted tool</code> 的关系</h2>
+
+                    <h3>20.1 <code>function tool</code></h3>
+                    <p>最常见的形态是：</p>
+                    <ul>
+                        <li>你的应用把 tool 定义直接塞给 LLM</li>
+                        <li>模型返回要调用哪个 tool、参数是什么</li>
+                        <li>你的应用自己执行</li>
+                        <li>再把结果回给模型</li>
+                    </ul>
+                    <p>它更像：</p>
+                    <blockquote><p>应用内直接函数分发。</p></blockquote>
+
+                    <h3>20.2 <code>MCP tool</code></h3>
+                    <p>最常见的形态是：</p>
+                    <ul>
+                        <li>Host / agent 先连接 MCP server</li>
+                        <li>通过协议发现有哪些 tools</li>
+                        <li>再把这些能力提供给模型</li>
+                        <li>模型决定调用后，由 Host 路由到 MCP server</li>
+                        <li>MCP server 返回结果</li>
+                        <li>Host 再把结果交回模型</li>
+                    </ul>
+                    <p>它更像：</p>
+                    <blockquote><p>通过标准协议调一个外部能力服务。</p></blockquote>
+
+                    <h3>20.3 <code>hosted tool</code></h3>
+                    <p>这类是平台自己提供并执行的工具，例如：</p>
+                    <ul>
+                        <li><code>web_search</code></li>
+                        <li><code>file_search</code></li>
+                        <li><code>code_interpreter</code></li>
+                        <li><code>computer_use</code></li>
+                    </ul>
+                    <p>特点：</p>
+                    <ul>
+                        <li>工具由平台官方提供</li>
+                        <li>执行位置通常在平台侧</li>
+                        <li>不是你自己托管的业务代码</li>
+                    </ul>
+
+                    <h3>20.4 一句话区别</h3>
+                    <ul>
+                        <li><code>function tool</code>：你把 tool 直接塞给模型</li>
+                        <li><code>MCP tool</code>：你把 tool 挂到 MCP server 上，再由 Host 提供给模型</li>
+                        <li><code>hosted tool</code>：平台自己提供并执行的工具</li>
+                    </ul>
+                    <p>最关键的一句是：</p>
+                    <blockquote><p><code>function tool</code> 和 <code>MCP tool</code> 的核心区别，不在于是不是 tool，而在于 tool 是怎么暴露给模型的。</p></blockquote>
+                    <hr>
+
+                    <h2>21. LLM 如何发现 MCP tool，并决定怎么调用</h2>
+                    <p>这里一个很关键的点是：</p>
+                    <blockquote><p>严格来说，不是 LLM 自己主动去“网上发现” MCP tool，<br>而是 Host / agent 先发现，再提供给 LLM。</p></blockquote>
+                    <p>最常见流程是：</p>
+                    <ol>
+                        <li><code>Host / agent</code> 先连接 MCP server</li>
+                        <li>通过 MCP 协议拿到：
+                            <ul>
+                                <li>有哪些 tools</li>
+                                <li>它们的名字</li>
+                                <li>描述</li>
+                                <li>参数 schema</li>
+                            </ul>
+                        </li>
+                        <li><code>Host / agent</code> 再把这些工具能力提供给 LLM</li>
+                        <li>LLM 基于这些描述，决定要不要调用、调用哪个、参数怎么填</li>
+                    </ol>
+                    <p>所以从工程视角，可以先这样理解：</p>
+                    <blockquote><p><code>function tool</code> 是 agent 直接塞给 LLM；<br><code>MCP tool</code> 是 agent 先从 MCP server 发现并注册，再塞给 LLM。</p></blockquote>
+                    <p>这个理解在大部分设计讨论里已经足够用了。</p>
+
+                    <h3>21.1 LLM 真正根据什么决定调用</h3>
+                    <p>不管是 function tool 还是 MCP tool，模型主要看这些信息：</p>
+                    <ul>
+                        <li>tool 名称</li>
+                        <li>tool 描述</li>
+                        <li>参数 schema</li>
+                        <li>当前用户任务</li>
+                        <li>之前 tool 调用返回的结果</li>
+                    </ul>
+                    <p>所以模型“决定怎么调用”的依据，本质上不是 MCP 本身，而是：</p>
+                    <blockquote><p>Host 暴露给它的工具元信息是否清晰、稳定、可理解。</p></blockquote>
+                    <hr>
+
+                    <h2>22. LLM 实际调用 function tool 和 MCP tool 时，有什么区别</h2>
+                    <p>如果只从模型的推理动作看，差异其实没有那么大。</p>
+                    <p>不管是哪一类 tool，模型都在做类似的事：</p>
+                    <ol>
+                        <li>判断要不要用 tool</li>
+                        <li>选哪个 tool</li>
+                        <li>组织参数</li>
+                        <li>发起调用</li>
+                        <li>读取结果后继续推理</li>
+                    </ol>
+                    <p>所以对模型来说，两者都很像是在“使用一个外部能力”。</p>
+
+                    <h3>22.1 真正不同的是系统侧链路</h3>
+                    <p><code>function tool</code> 的典型链路：</p>
+                    <div class="code-block">
+                        <div class="code-header"><span>Sequence</span></div>
+                        <pre><code>LLM
+ -&gt; 选择 tool
+ -&gt; 返回 tool name + args
+ -&gt; 应用本地执行
+ -&gt; 结果回给 LLM</code></pre>
+                    </div>
+                    <p><code>MCP tool</code> 的典型链路：</p>
+                    <div class="code-block">
+                        <div class="code-header"><span>Sequence</span></div>
+                        <pre><code>LLM
+ -&gt; 选择 MCP tool
+ -&gt; Host / MCP client 路由
+ -&gt; MCP server 执行
+ -&gt; 结果回给 Host
+ -&gt; 再回给 LLM</code></pre>
+                    </div>
+                    <p>所以区别不是“模型会不会调”，而是：</p>
+                    <ul>
+                        <li>function tool：更像应用内函数调用</li>
+                        <li>MCP tool：更像标准协议路由到工具服务</li>
+                    </ul>
+
+                    <h3>22.2 从模型效果上最大的区别</h3>
+                    <p>如果硬要说模型最有感的差异，通常是：</p>
+                    <ul>
+                        <li>MCP tool 往往更稳定、更长期</li>
+                        <li>function tool 往往更临时、更依赖当前应用上下文</li>
+                    </ul>
+                    <p>也就是说，MCP tool 通常更容易形成稳定命名、稳定参数和稳定返回结构，模型更容易“学会怎么用它”。</p>
+                    <hr>
+
+                    <h2>23. 既然最后很多时候都是塞给 LLM，MCP 真正多出来的价值是什么</h2>
+                    <p>这个问题其实是 MCP 的关键。</p>
+                    <p>一句话：</p>
+                    <blockquote><p>MCP 的价值不在“模型会不会调 tool”，<br>而在“工具层能不能标准化、复用、解耦、独立演进”。</p></blockquote>
+
+                    <h3>23.1 让工具从“应用内私有函数”变成“可复用能力服务”</h3>
+                    <p><code>function tool</code> 更像：</p>
+                    <ul>
+                        <li>某个应用里的内部函数</li>
+                        <li>常常跟当前 prompt 或当前 agent 绑得很死</li>
+                    </ul>
+                    <p><code>MCP</code> 更像：</p>
+                    <ul>
+                        <li>独立 server</li>
+                        <li>标准协议暴露</li>
+                        <li>多个 agent / 客户端可复用</li>
+                    </ul>
+
+                    <h3>23.2 让“接工具”这件事标准化</h3>
+                    <p>没有 MCP 时，经常会出现：</p>
+                    <ul>
+                        <li>A 应用写一套 GitHub 集成</li>
+                        <li>B 应用再写一套 GitHub 集成</li>
+                        <li>C agent 平台又写一套 GitHub 集成</li>
+                    </ul>
+                    <p>MCP 的价值就是减少这种重复造轮子。</p>
+
+                    <h3>23.3 更适合多工具、多系统环境</h3>
+                    <p>如果你只有两三个工具，function tool 往往够用。</p>
+                    <p>但如果你有很多系统：</p>
+                    <ul>
+                        <li>Slack</li>
+                        <li>GitHub</li>
+                        <li>PostgreSQL</li>
+                        <li>内部 CRM</li>
+                        <li>审批系统</li>
+                        <li>文档库</li>
+                    </ul>
+                    <p>那 MCP 更适合作为统一接入层。</p>
+
+                    <h3>23.4 更适合独立演进和团队协作</h3>
+                    <p>MCP 更适合这种边界：</p>
+                    <ul>
+                        <li>平台组维护 Host / agent</li>
+                        <li>业务组维护订单工具</li>
+                        <li>数据组维护检索工具</li>
+                        <li>运维组维护权限和部署</li>
+                    </ul>
+                    <p>也就是说，MCP 更像组织级的接口规范。</p>
+
+                    <h3>23.5 不只是 tool</h3>
+                    <p>MCP 原生就有：</p>
+                    <ul>
+                        <li><code>tools</code></li>
+                        <li><code>resources</code></li>
+                        <li><code>prompts</code></li>
+                    </ul>
+                    <p>所以它比“只会调函数”的方案更完整，更像一个 AI 集成协议，而不是单一工具调用机制。</p>
+
+                    <h3>23.6 什么情况下 MCP 不值得上</h3>
+                    <p>如果你只是：</p>
+                    <ul>
+                        <li>一个单体应用</li>
+                        <li>几个简单函数</li>
+                        <li>没有多客户端复用需求</li>
+                        <li>没有长期平台化需求</li>
+                    </ul>
+                    <p>那 MCP 很可能是过度设计。这时 function tool 往往更快、更简单。</p>
+                    <hr>
+
+                    <h2>24. 本机调用时，MCP 的性能损失大概有多少</h2>
+                    <p>一个很实用的结论是：</p>
+                    <blockquote><p>本机调用时，MCP 确实会有额外开销，<br>但通常不是主要瓶颈。</p></blockquote>
+                    <p>尤其当 tool 本身就要：</p>
+                    <ul>
+                        <li>查数据库</li>
+                        <li>读文件</li>
+                        <li>搜日志</li>
+                        <li>发网络请求</li>
+                    </ul>
+                    <p>这时 MCP 这层协议和进程开销，通常会被真实业务耗时淹没。</p>
+
+                    <h3>24.1 本机 MCP 多出来的开销是什么</h3>
+                    <p>如果是本机 <code>stdio</code> MCP，额外开销通常来自：</p>
+                    <ol>
+                        <li>进程边界</li>
+                        <li>JSON-RPC 序列化 / 反序列化</li>
+                        <li>路由与调度</li>
+                    </ol>
+                    <p>所以和本地直接 function call 相比，肯定会慢一点。</p>
+
+                    <h3>24.2 一般会慢多少</h3>
+                    <p>经验上可以先这样理解：</p>
+                    <ul>
+                        <li>本地直接函数调用：最低成本</li>
+                        <li>本机 <code>stdio</code> MCP：多一层轻量 IPC + JSON 编解码</li>
+                        <li>额外成本通常是毫秒级，甚至更低毫秒级</li>
+                    </ul>
+                    <p>也就是说：</p>
+                    <ul>
+                        <li>如果 tool 本身耗时小于 1ms，这层开销会比较显眼</li>
+                        <li>如果 tool 本身要 50ms、200ms、1s，这层开销通常不是关键问题</li>
+                    </ul>
+
+                    <h3>24.3 什么场景下会明显感觉到慢</h3>
+                    <ul>
+                        <li>超高频、小颗粒调用</li>
+                        <li>工具拆得太碎</li>
+                        <li>每次都重新启动 MCP server</li>
+                    </ul>
+                    <p>真正拖垮性能的，往往不是 MCP 本身，而是：</p>
+                    <ul>
+                        <li>工具设计过碎</li>
+                        <li>调用次数过多</li>
+                        <li>LLM 往返轮次太多</li>
+                    </ul>
+
+                    <h3>24.4 一个很实用的性能建议</h3>
+                    <ul>
+                        <li>高频、超轻量逻辑：留在应用内，直接函数调用</li>
+                        <li>中低频、可复用、跨系统能力：做成 MCP</li>
+                        <li>不要把一个业务动作拆成过多微小 tool</li>
+                        <li>让 MCP server 常驻，不要反复拉起</li>
+                    </ul>
+                    <p>一句话总结：</p>
+                    <blockquote><p>本机 MCP 相比直接 function call 确实有损耗，但通常是小开销；<br>只要 tool 不是超轻量高频调用，实际瓶颈一般不在 MCP。</p></blockquote>
+                    <hr>
+
+                    <h2>25. 什么样的能力适合留在本地函数，什么样的能力适合抽成 MCP</h2>
+
+                    <h3>25.1 更适合留在本地函数的能力</h3>
+                    <p>这类通常不值得抽成 MCP：</p>
+
+                    <h4>A. 超轻量工具</h4>
+                    <p>例如：</p>
+                    <ul>
+                        <li>字符串处理</li>
+                        <li>JSON 格式整理</li>
+                        <li>简单字段映射</li>
+                        <li>很小的内存查询</li>
+                    </ul>
+                    <p>特点：</p>
+                    <ul>
+                        <li>计算很轻</li>
+                        <li>调用频率高</li>
+                        <li>如果走 MCP，固定开销占比会偏大</li>
+                    </ul>
+
+                    <h4>B. 强依赖当前应用上下文</h4>
+                    <p>例如：</p>
+                    <ul>
+                        <li>直接依赖当前 session</li>
+                        <li>直接依赖当前页面状态</li>
+                        <li>直接依赖当前 agent 内部缓存</li>
+                    </ul>
+                    <p>特点：</p>
+                    <ul>
+                        <li>很难做成通用服务</li>
+                        <li>抽出去后上下文传递反而更麻烦</li>
+                    </ul>
+
+                    <h4>C. 只服务某一个 agent / 某一个 prompt 的临时逻辑</h4>
+                    <p>例如：</p>
+                    <ul>
+                        <li>某个专用格式转换</li>
+                        <li>某个 agent 专属后处理</li>
+                        <li>某个实验性分支判断</li>
+                    </ul>
+                    <p>特点：</p>
+                    <ul>
+                        <li>复用价值低</li>
+                        <li>生命周期短</li>
+                        <li>留在本地更简单</li>
+                    </ul>
+
+                    <h4>D. 高频基础组件</h4>
+                    <p>例如：</p>
+                    <ul>
+                        <li>参数校验</li>
+                        <li>小型规则判断</li>
+                        <li>局部数据拼装</li>
+                    </ul>
+                    <p>特点：</p>
+                    <ul>
+                        <li>这些更像内部函数，不像独立工具服务</li>
+                    </ul>
+
+                    <h3>25.2 更适合抽成 MCP 的能力</h3>
+                    <h4>A. 跨系统能力</h4>
+                    <p>例如：</p>
+                    <ul>
+                        <li>查 GitHub</li>
+                        <li>查 Slack</li>
+                        <li>查 PostgreSQL</li>
+                        <li>调内部业务系统 API</li>
+                    </ul>
+                    <p>特点：</p>
+                    <ul>
+                        <li>本来就是相对独立的外部能力</li>
+                        <li>很适合标准化暴露</li>
+                    </ul>
+
+                    <h4>B. 多个 agent / 多个应用都会用的能力</h4>
+                    <p>例如：</p>
+                    <ul>
+                        <li>用户查询</li>
+                        <li>订单查询</li>
+                        <li>日志检索</li>
+                        <li>文档搜索</li>
+                    </ul>
+                    <p>特点：</p>
+                    <ul>
+                        <li>复用价值高</li>
+                        <li>做成 MCP 后更容易共享</li>
+                    </ul>
+
+                    <h4>C. 需要独立演进的能力</h4>
+                    <p>例如：</p>
+                    <ul>
+                        <li>搜索服务</li>
+                        <li>检索服务</li>
+                        <li>审批服务</li>
+                        <li>内部知识库服务</li>
+                    </ul>
+                    <p>特点：</p>
+                    <ul>
+                        <li>工具层和 agent 层解耦更有价值</li>
+                        <li>便于团队分工维护</li>
+                    </ul>
+
+                    <h4>D. 边界清晰的读写能力</h4>
+                    <p>例如：</p>
+                    <ul>
+                        <li><code>search</code></li>
+                        <li><code>fetch</code></li>
+                        <li><code>create_ticket</code></li>
+                        <li><code>update_status</code></li>
+                    </ul>
+                    <p>特点：</p>
+                    <ul>
+                        <li>输入输出稳定</li>
+                        <li>容易定义 schema</li>
+                        <li>适合长期暴露给模型</li>
+                    </ul>
+
+                    <h4>E. 未来想平台化的能力</h4>
+                    <p>例如：</p>
+                    <ul>
+                        <li>公司统一知识检索</li>
+                        <li>公司统一工单能力</li>
+                        <li>公司统一业务查询接口</li>
+                    </ul>
+                    <p>特点：</p>
+                    <ul>
+                        <li>现在可能只有一个 agent 在用</li>
+                        <li>但未来明显会变成公共能力</li>
+                    </ul>
+
+                    <h3>25.3 一个最实用的判断公式</h3>
+                    <p>你可以直接问四个问题：</p>
+                    <ol>
+                        <li>这个能力是不是会被多个 agent / 应用复用？</li>
+                        <li>它是不是一个相对独立的系统能力？</li>
+                        <li>它的输入输出是不是稳定、清晰？</li>
+                        <li>它值不值得独立维护和演进？</li>
+                    </ol>
+                    <p>如果其中三项以上答案是“是”，那通常很适合抽成 MCP。</p>
+                    <p>如果多数答案是“否”，那通常更适合留在本地函数。</p>
+
+                    <h3>25.4 最后一句经验</h3>
+                    <blockquote><p>把“业务能力”抽成 MCP，<br>把“胶水逻辑”和“超轻量逻辑”留在本地函数。</p></blockquote>
+                    <p>例如：</p>
+                    <ul>
+                        <li>查询订单、查日志、搜文档：适合 MCP</li>
+                        <li>拼 prompt、改字段名、做小判断：适合本地函数</li>
+                    </ul>
+                    <hr>
+
                     <h2>参考资料</h2>
                     <ul>
                         <li>MCP Architecture:
