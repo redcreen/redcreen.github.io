@@ -71,186 +71,480 @@
                 </header>
 
                 <div class="article-intro">
-                    <p>这篇文章把一个常见混淆点讲清楚：<strong>“多 tool”说的是模型会不会调多个外部能力，“多次 LLM 调用”说的是流程是谁在驱动。</strong> 真实系统里，这两者经常同时存在。最实用的设计原则是：确定性的部分交给程序，语义判断和自然语言表达交给 LLM。</p>
+                    <p>这篇页面基本按原始 Markdown 文稿展开，只做了网页排版层面的整理。目标不是做“再摘要一次”的二次创作，而是把关于多 tool、多次 LLM 调用、状态机和平台托管能力的整段讨论尽量完整地保留下来。</p>
                 </div>
 
                 <div class="article-section">
-                    <h2>1. 先记住两个维度</h2>
-                    <div class="table-container">
-                        <table class="comparison-table">
-                            <thead>
-                                <tr>
-                                    <th>维度</th>
-                                    <th>它描述什么</th>
-                                    <th>最简单的理解</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>多 Tool</td>
-                                    <td>LLM 会不会调用多个外部能力</td>
-                                    <td>这是“能力使用方式”，比如查订单、查日志、再总结</td>
-                                </tr>
-                                <tr>
-                                    <td>多次 LLM 调用</td>
-                                    <td>整个流程是不是由程序分多轮驱动</td>
-                                    <td>这是“流程编排方式”，比如程序看状态后再决定什么时候调用下一轮 LLM</td>
-                                </tr>
-                                <tr>
-                                    <td>状态机</td>
-                                    <td>当前走到哪个阶段，当前允许做什么</td>
-                                    <td>状态机在程序里，不在 LLM 里。程序用它来限制当前可用 tool 和状态迁移</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p>所以一个真实系统完全可能同时满足三件事：程序通过状态机多次调用 LLM，而每一轮 LLM 调用里又会继续使用多个 tool。</p>
-                </div>
-
-                <div class="article-section">
-                    <h2>2. 为什么多 Tool 经常更快</h2>
-                    <p>大部分情况下，你可以先用这个心智模型理解：<strong>多 tool 往往更像“稳定前缀 + 增量追加”，平台更容易做状态复用和缓存，所以常常更快。</strong></p>
-
-                    <div class="decision-cards">
-                        <div class="decision-card">
-                            <div class="decision-icon">🔁</div>
-                            <h3>每次都重拼大 Prompt</h3>
-                            <p>如果每轮都重新带一遍 system prompt、原始需求、上一步结果和历史上下文，重复内容会很多。平台较难看出哪些内容其实没有变。</p>
-                        </div>
-                        <div class="decision-card">
-                            <div class="decision-icon">➕</div>
-                            <h3>在同一个任务里追加 Tool 结果</h3>
-                            <p>如果变化主要发生在尾部，前缀保持稳定，平台就更容易识别“前面相同、后面新增”，于是更容易做缓存、续跑和复用。</p>
-                        </div>
-                    </div>
-
-                    <div class="warning-box">
-                        <h4>先别把原因理解得太底层</h4>
-                        <p>设计阶段不必纠结“是不是每一个 token 的底层计算都真的减少了”。更实用的结论是：<strong>多 tool 更容易形成稳定结构，所以在大部分平台实现里往往更快、更省重复开销。</strong></p>
-                    </div>
-                </div>
-
-                <div class="article-section">
-                    <h2>3. 状态机和 LLM 怎么配合</h2>
-                    <p>状态机不是替代多 tool，而是在多 tool 外面再加一层“交通灯”。它不是让模型记住流程，而是由程序直接规定：<strong>你现在只能做这几步。</strong></p>
-
-                    <div class="intro-section">
-                        <div class="intro-card">
-                            <h2>没有状态机</h2>
-                            <p>你一次性把全部 tool 都给模型，再在 prompt 里写“请按顺序做”。这种做法能跑，但本质还是软约束。</p>
-                            <ul class="feature-list">
-                                <li><span class="icon">📝</span><strong>规则在 prompt 里</strong></li>
-                                <li><span class="icon">🤖</span><strong>模型负责遵守</strong></li>
-                                <li><span class="icon">⚠️</span><strong>可能跳步或分支判断漂移</strong></li>
+                    <h2>1. 先说结论</h2>
+                    <ul>
+                        <li><code>多 tool</code> 和 <code>多次 LLM 调用</code> 不是对立关系，而是两个不同维度。</li>
+                        <li><code>多 tool</code> 说的是：LLM 会不会调用多个外部能力。</li>
+                        <li><code>多次 LLM 调用</code> 说的是：整个流程是不是由程序分多轮驱动。</li>
+                        <li>一个系统完全可以同时满足这两点：
+                            <ul>
+                                <li>程序通过状态机多次调用 LLM</li>
+                                <li>每次 LLM 调用里又可以调用多个 tool</li>
                             </ul>
-                        </div>
-                        <div class="intro-card">
-                            <h2>有状态机</h2>
-                            <p>程序记录当前状态，根据状态只开放有限 tool。LLM 不需要记完整流程，它只需要知道当前状态和当前允许做什么。</p>
-                            <ul class="feature-list">
-                                <li><span class="icon">🚦</span><strong>规则在程序里</strong></li>
-                                <li><span class="icon">🔒</span><strong>系统强制边界</strong></li>
-                                <li><span class="icon">✅</span><strong>更适合审批、审计、留痕</strong></li>
-                            </ul>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
+                    <p class="note">最容易记的方式：</p>
+                    <ul>
+                        <li><code>多 tool</code> = 能力使用方式</li>
+                        <li><code>多次 LLM 调用</code> = 流程编排方式</li>
+                    </ul>
+                    <hr>
 
-                    <div class="code-block">
-                        <div class="code-header">
-                            <span>状态机 + LLM 的最小链路</span>
-                        </div>
-                        <pre><code>1. 程序读取当前 state
-2. 程序把当前 state 和 allowed_tools 传给 LLM
-3. LLM 在当前边界里选择一个 tool
-4. 程序执行 tool
-5. 程序根据 tool 结果切换 state
-6. 程序再发起下一轮 LLM 调用</code></pre>
-                    </div>
+                    <h2>2. 多 Tool 和多次 LLM 调用的区别</h2>
+                    <h3>2.1 多 Tool</h3>
+                    <p>典型形态：</p>
+                    <ol>
+                        <li>用户给出一个任务</li>
+                        <li>LLM 判断先调用哪个 tool</li>
+                        <li>tool 返回结果</li>
+                        <li>LLM 再决定下一步是否继续调用别的 tool</li>
+                        <li>最后输出结果</li>
+                    </ol>
+                    <p>它更像一个 agent 在做事。</p>
+                    <p>特点：</p>
+                    <ul>
+                        <li>路径更灵活</li>
+                        <li>对客户端编排要求更低</li>
+                        <li>适合“查 A -&gt; 查 B -&gt; 总结”这类开放型流程</li>
+                    </ul>
 
-                    <p>因此，只要是程序按状态机一轮一轮推进，本质上就是多次 LLM 调用。状态机和多 tool 不冲突，它们经常是叠在一起使用的。</p>
-                </div>
+                    <h3>2.2 多次 LLM 调用</h3>
+                    <p>典型形态：</p>
+                    <ol>
+                        <li>程序先调用一次 LLM</li>
+                        <li>根据结果调用 tool 或执行某个逻辑</li>
+                        <li>程序再调用下一次 LLM</li>
+                        <li>重复这个过程直到完成</li>
+                    </ol>
+                    <p>它更像一个 workflow / controller 在驱动模型。</p>
+                    <p>特点：</p>
+                    <ul>
+                        <li>控制力更强</li>
+                        <li>更适合固定流程</li>
+                        <li>更容易做审计、重试、人工介入、状态管理</li>
+                    </ul>
+                    <hr>
 
-                <div class="article-section">
-                    <h2>4. 为什么不直接在程序里硬编码调用 Tool</h2>
-                    <p>如果调哪个 tool、按什么顺序调、tool 返回后怎么处理、分支条件怎么判断，这些事情都已经是确定的，那就没有必要额外绕一层 LLM。程序直接调 tool 往往更快、更稳、更便宜。</p>
+                    <h2>3. 为什么很多场景下“多 Tool”看起来更省 token、更快</h2>
+                    <p>核心不是因为用了 <code>tool</code> 这两个字，而是因为：</p>
+                    <blockquote>
+                        <p>多 tool 的工作流通常更像“稳定前缀 + 增量追加”，平台更容易做状态复用、缓存或续跑。</p>
+                    </blockquote>
 
-                    <div class="decision-cards">
-                        <div class="decision-card">
-                            <div class="decision-icon">🧮</div>
-                            <h3>适合直接写死的部分</h3>
-                            <p>固定顺序、清晰规则、明确分支、结构化返回。比如 ETL、定时同步、固定审批节点的执行动作。</p>
-                        </div>
-                        <div class="decision-card">
-                            <div class="decision-icon">🗣️</div>
-                            <h3>适合交给 LLM 的部分</h3>
-                            <p>意图识别、tool 选择、长文本总结、日志归因、开放式语义判断、自然语言解释和追问。</p>
-                        </div>
-                    </div>
+                    <h3>3.1 直觉理解</h3>
+                    <p>如果你每次都重新拼一个大 prompt：</p>
+                    <ul>
+                        <li>system prompt 又带一遍</li>
+                        <li>用户问题又带一遍</li>
+                        <li>前面结果又带一遍</li>
+                        <li>历史上下文又带一遍</li>
+                    </ul>
+                    <p>那重复内容会很多。</p>
+                    <p>如果是同一个任务内不断追加 tool result：</p>
+                    <ul>
+                        <li>前缀通常比较稳定</li>
+                        <li>变化更多发生在尾部</li>
+                        <li>平台更容易识别“前面没变，后面只是多了一点新内容”</li>
+                    </ul>
+                    <p>所以通常更容易：</p>
+                    <ul>
+                        <li>少重复传输</li>
+                        <li>少重复组装上下文</li>
+                        <li>更容易做缓存或状态复用</li>
+                        <li>在很多实现里表现得更快</li>
+                    </ul>
 
-                    <div class="article-footer">
-                        <p>最实用的原则：能写死，就别让 LLM 猜；需要理解和表达时，再让 LLM 参与。</p>
-                    </div>
-                </div>
+                    <h3>3.2 但要注意</h3>
+                    <p>这个结论是“通常如此”，不是绝对规律。</p>
+                    <p>因为还要看：</p>
+                    <ul>
+                        <li>tool 返回是不是很大</li>
+                        <li>平台内部怎么计费</li>
+                        <li>平台是否真的做了缓存/摘要/复用</li>
+                        <li>tool 本身是不是很慢</li>
+                    </ul>
+                    <p>所以更准确的表达是：</p>
+                    <blockquote>
+                        <p>大部分情况下，多 tool 更容易形成稳定上下文，因此平台更容易优化，所以经常更快。</p>
+                    </blockquote>
+                    <hr>
 
-                <div class="article-section">
-                    <h2>5. 自定义 Tool 能不能放到平台端跑</h2>
-                    <p>这个问题最容易混淆。“模型能不能调用你的 tool”和“平台会不会替你执行你的业务代码”不是一回事。</p>
+                    <h2>4. “平台保存上下文”到底意味着什么</h2>
+                    <p>我们讨论里有一个重要澄清：</p>
+                    <blockquote>
+                        <p>平台替你保存工作流现场，并不自动等于 LLM 实际处理的 token 计算量一定变少。</p>
+                    </blockquote>
+                    <p>需要分开看三件事：</p>
 
-                    <div class="table-container">
-                        <table class="comparison-table">
-                            <thead>
-                                <tr>
-                                    <th>类型</th>
-                                    <th>平台负责什么</th>
-                                    <th>真正执行位置</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Function / Custom Tool</td>
-                                    <td>模型决定调哪个 tool、参数是什么</td>
-                                    <td>通常还是你自己的应用或服务</td>
-                                </tr>
-                                <tr>
-                                    <td>Remote MCP</td>
-                                    <td>模型通过标准接口使用你的远程工具</td>
-                                    <td>你自己部署的 MCP Server</td>
-                                </tr>
-                                <tr>
-                                    <td>Hosted Tools</td>
-                                    <td>平台直接提供能力，例如搜索或代码执行</td>
-                                    <td>OpenAI 平台侧</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <h3>4.1 传输层</h3>
+                    <p>如果平台保存了状态，你后续可能只需要传：</p>
+                    <ul>
+                        <li><code>previous_response_id</code></li>
+                        <li>新的 <code>tool_output</code></li>
+                    </ul>
+                    <p>这会让你客户端发出的内容明显变少。</p>
 
-                    <div class="warning-box">
-                        <h4>一个足够实用的判断</h4>
-                        <p>如果你问的是“模型能不能调用我定义的 tool”，答案通常是可以；如果你问的是“平台能不能替我托管任意自定义业务代码”，答案通常是否定的。自定义 tool 一般还是由你自己执行，或者由你自己部署成 MCP 服务。</p>
-                    </div>
-                </div>
+                    <h3>4.2 计费层</h3>
+                    <p>很多时候会更省，但不一定完全等于“你没传就不算”。因为平台可能会在内部恢复上下文再喂给模型。</p>
 
-                <div class="article-section">
-                    <h2>6. 最后的设计建议</h2>
-                    <p>如果你只是想设计出一套大体合理的系统，不需要一开始就追求特别严格的理论模型。先按下面这套判断就够用了。</p>
+                    <h3>4.3 模型计算层</h3>
+                    <p>即使平台替你存了状态，模型在下一步推理时仍可能需要知道：</p>
+                    <ul>
+                        <li>前面发生了什么</li>
+                        <li>当前目标是什么</li>
+                        <li>上一个 tool 返回了什么</li>
+                    </ul>
+                    <p>所以底层是否真的少算，取决于平台实现。</p>
 
-                    <div class="decision-cards">
-                        <div class="decision-card">
-                            <div class="decision-icon">⚡</div>
-                            <h3>开放任务</h3>
-                            <p>优先考虑多 tool。让 LLM 在一个连续任务里读资料、查信息、调用外部能力，然后总结。</p>
-                        </div>
-                        <div class="decision-card">
-                            <div class="decision-icon">🚦</div>
-                            <h3>高风险流程</h3>
-                            <p>外层加状态机，程序卡住权限和步骤，再让 LLM 在当前状态内使用 tool。这样既保留灵活性，也不把边界全押在 prompt 上。</p>
-                        </div>
-                    </div>
+                    <h3>4.4 一个足够实用的理解</h3>
+                    <p>虽然不必追求特别严谨，但设计上可以先用这个心智模型：</p>
+                    <blockquote>
+                        <p>多 tool 更容易形成稳定前缀和增量更新，所以更容易命中平台优化，通常更快。</p>
+                    </blockquote>
+                    <p>这个理解对架构设计已经够用了。</p>
+                    <hr>
 
-                    <div class="article-footer">
-                        <p>一句话总结：多 tool 负责效率和灵活性，状态机负责边界和可靠性，程序负责控制，LLM 负责理解与表达。</p>
-                    </div>
+                    <h2>5. 为什么“状态机 + 多 Tool”其实还是多次 LLM 调用</h2>
+                    <p>这是整段讨论里最关键的澄清点之一。</p>
+
+                    <h3>5.1 状态机是什么</h3>
+                    <p>状态机做的事很简单：</p>
+                    <ol>
+                        <li>记录当前处于哪个阶段</li>
+                        <li>决定当前允许哪些 tool</li>
+                        <li>决定 tool 返回后如何切到下一个状态</li>
+                    </ol>
+                    <p>例如：</p>
+                    <ul>
+                        <li><code>INIT</code></li>
+                        <li><code>WAITING_APPROVAL</code></li>
+                        <li><code>APPROVED</code></li>
+                        <li><code>REJECTED</code></li>
+                        <li><code>DONE</code></li>
+                    </ul>
+
+                    <h3>5.2 它如何和 LLM 配合</h3>
+                    <p>通常是：</p>
+                    <ol>
+                        <li>程序里维护状态机</li>
+                        <li>程序读取当前状态</li>
+                        <li>程序调用 LLM，并告诉它当前状态和当前允许的 tools</li>
+                        <li>LLM 调用某个 tool</li>
+                        <li>程序执行 tool</li>
+                        <li>程序根据 tool 结果更新状态</li>
+                        <li>程序再次调用 LLM</li>
+                    </ol>
+                    <p>所以只要是程序按状态机一轮一轮推进，本质上就是：</p>
+                    <blockquote>
+                        <p><code>状态机编排 = 程序多次调用 LLM</code></p>
+                    </blockquote>
+                    <p>这没有问题，也不和“多 tool”冲突。</p>
+
+                    <h3>5.3 为什么会容易混淆</h3>
+                    <p>因为“多 tool”描述的是 LLM 会不会调多个外部能力；而“状态机”描述的是流程由谁来控制。</p>
+                    <p>所以真实系统里常见的是：</p>
+                    <ul>
+                        <li>外层：状态机 / workflow 控流程</li>
+                        <li>内层：LLM 在当前状态下使用多个 tool</li>
+                    </ul>
+                    <hr>
+
+                    <h2>6. 状态机卡流程，到底在“卡”什么</h2>
+                    <p>一句话：</p>
+                    <blockquote>
+                        <p>不是让模型“记得按流程做”，而是程序直接限制它“现在只能这么做”。</p>
+                    </blockquote>
+
+                    <h3>6.1 不加状态机</h3>
+                    <p>假设你一次性把这些 tool 都给模型：</p>
+                    <ul>
+                        <li><code>collect_info</code></li>
+                        <li><code>human_approval</code></li>
+                        <li><code>execute_action</code></li>
+                        <li><code>reject_case</code></li>
+                    </ul>
+                    <p>然后在 prompt 里写：</p>
+                    <blockquote>
+                        <p>先收集信息，风险高就审批，通过后再执行。</p>
+                    </blockquote>
+                    <p>这种做法的问题是：</p>
+                    <ul>
+                        <li>规则主要在 prompt 里</li>
+                        <li>模型是“被要求遵守”</li>
+                        <li>但系统没有从机制上强制</li>
+                    </ul>
+
+                    <h3>6.2 加状态机</h3>
+                    <p>程序按状态分配 tool：</p>
+                    <ul>
+                        <li><code>INIT</code> 只开放 <code>collect_info</code></li>
+                        <li><code>WAITING_APPROVAL</code> 只开放 <code>human_approval</code></li>
+                        <li><code>APPROVED</code> 只开放 <code>execute_action</code></li>
+                        <li><code>REJECTED</code> 只开放 <code>reject_case</code></li>
+                    </ul>
+                    <p>这时模型在 <code>WAITING_APPROVAL</code> 阶段根本看不到 <code>execute_action</code>。</p>
+                    <p>这就是“卡流程”。</p>
+                    <p>所以：</p>
+                    <ul>
+                        <li>不加状态机：软约束</li>
+                        <li>加状态机：硬约束</li>
+                    </ul>
+                    <hr>
+
+                    <h2>7. 人工确认能不能也做成 Tool</h2>
+                    <p>可以，而且很常见。</p>
+                    <p>例如可以做成：</p>
+                    <ul>
+                        <li><code>request_human_approval</code></li>
+                        <li><code>select_branch</code></li>
+                        <li><code>confirm_risk_action</code></li>
+                    </ul>
+                    <p>这样 LLM 也能在流程里调用“人工确认”。</p>
+                    <p>但这里有一个关键区分：</p>
+
+                    <h3>7.1 人工确认作为 tool</h3>
+                    <ul>
+                        <li>仍然是 LLM 主导流程</li>
+                        <li>模型决定什么时候问人、问什么、拿到结果后怎么继续</li>
+                    </ul>
+
+                    <h3>7.2 人工确认作为 workflow gate</h3>
+                    <ul>
+                        <li>由程序控制“必须停在这里”</li>
+                        <li>没有审批结果就不允许进入下一步</li>
+                        <li>是否开放后续 tool 由程序决定</li>
+                    </ul>
+                    <p>所以：</p>
+                    <blockquote>
+                        <p>人工确认可以封成 tool，但如果流程要求很硬，外层仍然更适合由程序卡死。</p>
+                    </blockquote>
+                    <hr>
+
+                    <h2>8. 为什么不是直接在程序里硬编码调 Tool</h2>
+                    <p>这个问题其实是架构设计的核心。</p>
+                    <p>如果以下事情都已经确定：</p>
+                    <ul>
+                        <li>调哪个 tool</li>
+                        <li>调用顺序</li>
+                        <li>tool 返回后怎么处理</li>
+                        <li>分支条件也能用普通代码清楚表达</li>
+                    </ul>
+                    <p>那通常没必要绕 LLM，程序直接调 tool 就好了。</p>
+                    <p>这样一般会：</p>
+                    <ul>
+                        <li>更快</li>
+                        <li>更稳</li>
+                        <li>更便宜</li>
+                        <li>更容易测试</li>
+                    </ul>
+
+                    <h3>8.1 为什么还要引入 LLM</h3>
+                    <p>因为有些节点不适合硬编码，例如：</p>
+                    <ol>
+                        <li>需要理解用户意图后再选 tool</li>
+                        <li>tool 返回的是长文本、日志、网页、文档，需要总结提炼</li>
+                        <li>分支条件带语义判断，不是简单数值判断</li>
+                        <li>需要自然语言解释、追问、总结、约束表达</li>
+                    </ol>
+                    <p>所以一个很实用的原则是：</p>
+                    <blockquote>
+                        <p>确定性的部分交给程序；<br>含糊的、语义性的、需要语言理解和生成的部分交给 LLM。</p>
+                    </blockquote>
+                    <p>更白话一点：</p>
+                    <blockquote>
+                        <p>能写死，就别让 LLM 猜。<br>需要“理解”和“表达”时，再用 LLM。</p>
+                    </blockquote>
+                    <hr>
+
+                    <h2>9. 什么时候选哪种方案</h2>
+                    <h3>9.1 纯多 Tool / agent 风格</h3>
+                    <p>适合：</p>
+                    <ul>
+                        <li>开放式任务</li>
+                        <li>工具选择不完全固定</li>
+                        <li>目标是快速做事</li>
+                        <li>希望减少程序编排复杂度</li>
+                    </ul>
+                    <p>例如：</p>
+                    <ul>
+                        <li>查资料</li>
+                        <li>读文件</li>
+                        <li>查日志</li>
+                        <li>最后总结</li>
+                    </ul>
+
+                    <h3>9.2 状态机 + 多 Tool</h3>
+                    <p>适合：</p>
+                    <ul>
+                        <li>有固定阶段</li>
+                        <li>流程不能跳步</li>
+                        <li>需要审批、审计、留痕</li>
+                        <li>某些动作存在权限边界或合规要求</li>
+                    </ul>
+                    <p>例如：</p>
+                    <ul>
+                        <li>报销审批</li>
+                        <li>SQL 执行审批</li>
+                        <li>发版审批流</li>
+                        <li>高风险操作执行</li>
+                    </ul>
+
+                    <h3>9.3 直接程序调用 Tool，不走 LLM</h3>
+                    <p>适合：</p>
+                    <ul>
+                        <li>流程完全确定</li>
+                        <li>分支规则简单明确</li>
+                        <li>不需要语义理解</li>
+                        <li>不需要自然语言生成</li>
+                    </ul>
+                    <p>例如：</p>
+                    <ul>
+                        <li>定时同步数据</li>
+                        <li>按规则批处理</li>
+                        <li>固定 ETL</li>
+                        <li>明确的系统集成流程</li>
+                    </ul>
+                    <hr>
+
+                    <h2>10. 最推荐的设计方式：混合式</h2>
+                    <p>最稳的设计通常不是“全靠 prompt”，也不是“所有事情都写死”。</p>
+                    <p>更常见、也更合理的做法是：</p>
+                    <ol>
+                        <li>外层由程序维护状态机</li>
+                        <li>每个状态只开放允许的 tools</li>
+                        <li>LLM 负责当前状态内的理解、判断、tool 选择和结果表达</li>
+                        <li>状态切换由程序根据规则或外部事件触发</li>
+                    </ol>
+                    <p>这可以概括成一句话：</p>
+                    <blockquote>
+                        <p>程序控制“能不能做”，LLM 负责“怎么理解、怎么表达、在允许范围内怎么做”。</p>
+                    </blockquote>
+                    <hr>
+
+                    <h2>11. 一份最终可直接记住的结论</h2>
+                    <h3>11.1 关于多 Tool 和多次 LLM 调用</h3>
+                    <ul>
+                        <li><code>多 tool</code> 不是 <code>多次 LLM 调用</code> 的反义词</li>
+                        <li>它们是两个不同维度</li>
+                        <li>真实系统里常常同时存在</li>
+                    </ul>
+
+                    <h3>11.2 关于速度</h3>
+                    <ul>
+                        <li>大部分情况下，多 tool 工作流更容易形成稳定上下文</li>
+                        <li>平台更容易做状态复用和缓存</li>
+                        <li>所以常常更快</li>
+                    </ul>
+
+                    <h3>11.3 关于状态机</h3>
+                    <ul>
+                        <li>状态机在程序里，不在 LLM 里</li>
+                        <li>程序按状态多次调用 LLM</li>
+                        <li>每次只给 LLM 当前状态允许的 tools</li>
+                        <li>状态变更通常由程序根据 tool 结果或外部事件触发</li>
+                    </ul>
+
+                    <h3>11.4 关于是否需要 LLM</h3>
+                    <ul>
+                        <li>如果流程和分支都很确定，直接程序调用 tool</li>
+                        <li>如果需要语义判断、意图识别、文本总结、自然语言交互，再引入 LLM</li>
+                    </ul>
+
+                    <h3>11.5 最实用的一句话</h3>
+                    <blockquote>
+                        <p>能写死，就别让 LLM 猜；<br>需要理解和表达时，再让 LLM 参与；<br>高风险流程外层用状态机卡住，内层再给 LLM 多 tool 能力。</p>
+                    </blockquote>
+                    <hr>
+
+                    <h2>12. 自定义 Tool 能不能放到平台端跑</h2>
+                    <p>这个问题很容易和“平台支持 tool 调用”混在一起，实际上要分开看。</p>
+
+                    <h3>12.1 一般情况下，不能把任意自定义业务 Tool 直接丢给平台托管执行</h3>
+                    <p>更准确地说：</p>
+                    <ul>
+                        <li>你可以把自定义 tool 暴露给模型</li>
+                        <li>模型可以决定何时调用它</li>
+                        <li>但这个 tool 的真正执行位置，通常还是在你自己的服务、应用或 runtime 里</li>
+                    </ul>
+                    <p>也就是说：</p>
+                    <blockquote>
+                        <p>平台可以帮你做“tool decision”，<br>但不等于平台会替你执行任意自定义业务代码。</p>
+                    </blockquote>
+
+                    <h3>12.2 常见的三种情况</h3>
+                    <h4>A. Function calling / custom tool</h4>
+                    <p>这是最常见的“自定义 tool”。</p>
+                    <p>特点：</p>
+                    <ul>
+                        <li>你把 tool 定义告诉模型</li>
+                        <li>模型返回要调用哪个 tool、参数是什么</li>
+                        <li>真正执行还是在你的程序里</li>
+                    </ul>
+                    <p>所以它本质上是：</p>
+                    <blockquote>
+                        <p>模型负责决定调用，<br>你的程序负责执行。</p>
+                    </blockquote>
+
+                    <h4>B. Remote MCP</h4>
+                    <p>这也能让模型调用你的能力。</p>
+                    <p>特点：</p>
+                    <ul>
+                        <li>你把能力做成一个 MCP server</li>
+                        <li>模型可以通过 MCP 使用这些工具</li>
+                        <li>但 MCP server 仍然是你自己部署和维护的服务</li>
+                    </ul>
+                    <p>所以它不是“OpenAI 平台替你跑业务代码”，而是：</p>
+                    <blockquote>
+                        <p>OpenAI 平台连接到你自己的工具服务。</p>
+                    </blockquote>
+
+                    <h4>C. 平台托管的 hosted tools</h4>
+                    <p>这类才更接近“平台端执行”。</p>
+                    <p>例如官方提供的：</p>
+                    <ul>
+                        <li><code>web_search</code></li>
+                        <li><code>file_search</code></li>
+                        <li><code>code_interpreter</code></li>
+                        <li><code>image_generation</code></li>
+                        <li><code>computer_use</code></li>
+                        <li><code>shell</code></li>
+                    </ul>
+                    <p>这些是平台自带能力，不是你把任意自定义函数上传上去运行。</p>
+
+                    <h3>12.3 一个很实用的判断方式</h3>
+                    <p>如果你问的是：</p>
+                    <blockquote>
+                        <p>“模型能不能调用我定义的 tool？”</p>
+                    </blockquote>
+                    <p>答案通常是：</p>
+                    <blockquote>
+                        <p>可以。</p>
+                    </blockquote>
+                    <p>如果你问的是：</p>
+                    <blockquote>
+                        <p>“OpenAI 能不能替我托管执行任意自定义业务 tool 代码？”</p>
+                    </blockquote>
+                    <p>答案通常是：</p>
+                    <blockquote>
+                        <p>不行，通常还是你自己执行，或者你自己部署成 MCP 服务。</p>
+                    </blockquote>
+
+                    <h3>12.4 设计上的启发</h3>
+                    <p>所以实际架构里，一般是这样分层：</p>
+                    <ul>
+                        <li>OpenAI 平台负责模型推理和工具调用决策</li>
+                        <li>你的应用负责业务 tool 执行</li>
+                        <li>如果要远程化、标准化，可以把工具封装成 MCP server</li>
+                        <li>如果需求刚好能被官方 hosted tools 覆盖，就直接用平台能力</li>
+                    </ul>
+                    <p>一句话总结就是：</p>
+                    <blockquote>
+                        <p>自定义 tool 可以接入平台让模型去调用，<br>但执行位置通常还是你这边；<br>真正由平台侧运行的，主要是 OpenAI 自带的 hosted tools。</p>
+                    </blockquote>
                 </div>
             </article>
 

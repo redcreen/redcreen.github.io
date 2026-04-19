@@ -1534,6 +1534,74 @@ body {
     margin-bottom: 20px;
 }
 
+.article-section h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 28px 0 14px;
+}
+
+.article-section h4 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 24px 0 12px;
+}
+
+.article-section p,
+.article-section li {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-secondary);
+}
+
+.article-section p {
+    margin: 0 0 16px;
+}
+
+.article-section ul,
+.article-section ol {
+    margin: 0 0 20px 22px;
+}
+
+.article-section li {
+    margin-bottom: 8px;
+}
+
+.article-section hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+}
+
+.article-section code {
+    background: #e2e8f0;
+    color: #0f172a;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.article-section blockquote {
+    margin: 20px 0;
+    padding: 16px 20px;
+    border-left: 4px solid var(--primary);
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.article-section blockquote p {
+    margin: 0;
+    color: #1e3a8a;
+    font-weight: 500;
+}
+
+.article-section .note {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
 /* ==================== 对比表格样式 ==================== */
 
 .table-container {
