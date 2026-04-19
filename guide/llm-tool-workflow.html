@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM、Tool 与状态机编排 - OpenClaw 完全指南</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🐾</span>
+                    <span class="logo-text">OpenClaw</span>
+                </div>
+                <p class="tagline">完全指南</p>
+            </div>
+
+            <div class="nav-section">
+                <h3>基础概念</h3>
+                <ul>
+                    <li><a href="index.html">📖 概述</a></li>
+                    <li><a href="quickstart.html">🚀 快速上手</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>核心功能</h3>
+                <ul>
+                    <li><a href="multi-agent.html">🧠 多实例架构</a></li>
+                    <li><a href="task-execution.html">⚡ 任务执行机制</a></li>
+                    <li><a href="multi-agent-setup.html">👥 多 Agent 搭建指南</a></li>
+                    <li><a href="multi-agent-practice.html">🛠️ 多 Agent 最佳实践</a></li>
+                    <li><a href="agent-vs-subagent.html">🔀 Agent vs Subagent</a></li>
+                    <li><a href="llm-tool-workflow.html" class="active">🧩 LLM 与 Tool 编排</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>配置指南</h3>
+                <ul>
+                    <li><a href="config.html">🔧 配置文件详解</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>资源推荐</h3>
+                <ul>
+                    <li><a href="popular-skills.html">⭐ 最受欢迎的 Skills</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-footer">
+                <p>持续更新中...</p>
+            </div>
+        </nav>
+
+        <main class="content">
+            <article class="article-page">
+                <header class="article-header">
+                    <div class="article-meta">
+                        <span class="article-category">架构设计</span>
+                        <span class="article-date">📅 2026-04-19</span>
+                    </div>
+                    <h1>🧩 LLM、Tool 与状态机编排</h1>
+                    <p class="article-subtitle">把多 tool、状态机、平台托管和程序控制放到一张图里理解</p>
+                </header>
+
+                <div class="article-intro">
+                    <p>这篇文章把一个常见混淆点讲清楚：<strong>“多 tool”说的是模型会不会调多个外部能力，“多次 LLM 调用”说的是流程是谁在驱动。</strong> 真实系统里，这两者经常同时存在。最实用的设计原则是：确定性的部分交给程序，语义判断和自然语言表达交给 LLM。</p>
+                </div>
+
+                <div class="article-section">
+                    <h2>1. 先记住两个维度</h2>
+                    <div class="table-container">
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>维度</th>
+                                    <th>它描述什么</th>
+                                    <th>最简单的理解</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>多 Tool</td>
+                                    <td>LLM 会不会调用多个外部能力</td>
+                                    <td>这是“能力使用方式”，比如查订单、查日志、再总结</td>
+                                </tr>
+                                <tr>
+                                    <td>多次 LLM 调用</td>
+                                    <td>整个流程是不是由程序分多轮驱动</td>
+                                    <td>这是“流程编排方式”，比如程序看状态后再决定什么时候调用下一轮 LLM</td>
+                                </tr>
+                                <tr>
+                                    <td>状态机</td>
+                                    <td>当前走到哪个阶段，当前允许做什么</td>
+                                    <td>状态机在程序里，不在 LLM 里。程序用它来限制当前可用 tool 和状态迁移</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>所以一个真实系统完全可能同时满足三件事：程序通过状态机多次调用 LLM，而每一轮 LLM 调用里又会继续使用多个 tool。</p>
+                </div>
+
+                <div class="article-section">
+                    <h2>2. 为什么多 Tool 经常更快</h2>
+                    <p>大部分情况下，你可以先用这个心智模型理解：<strong>多 tool 往往更像“稳定前缀 + 增量追加”，平台更容易做状态复用和缓存，所以常常更快。</strong></p>
+
+                    <div class="decision-cards">
+                        <div class="decision-card">
+                            <div class="decision-icon">🔁</div>
+                            <h3>每次都重拼大 Prompt</h3>
+                            <p>如果每轮都重新带一遍 system prompt、原始需求、上一步结果和历史上下文，重复内容会很多。平台较难看出哪些内容其实没有变。</p>
+                        </div>
+                        <div class="decision-card">
+                            <div class="decision-icon">➕</div>
+                            <h3>在同一个任务里追加 Tool 结果</h3>
+                            <p>如果变化主要发生在尾部，前缀保持稳定，平台就更容易识别“前面相同、后面新增”，于是更容易做缓存、续跑和复用。</p>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>先别把原因理解得太底层</h4>
+                        <p>设计阶段不必纠结“是不是每一个 token 的底层计算都真的减少了”。更实用的结论是：<strong>多 tool 更容易形成稳定结构，所以在大部分平台实现里往往更快、更省重复开销。</strong></p>
+                    </div>
+                </div>
+
+                <div class="article-section">
+                    <h2>3. 状态机和 LLM 怎么配合</h2>
+                    <p>状态机不是替代多 tool，而是在多 tool 外面再加一层“交通灯”。它不是让模型记住流程，而是由程序直接规定：<strong>你现在只能做这几步。</strong></p>
+
+                    <div class="intro-section">
+                        <div class="intro-card">
+                            <h2>没有状态机</h2>
+                            <p>你一次性把全部 tool 都给模型，再在 prompt 里写“请按顺序做”。这种做法能跑，但本质还是软约束。</p>
+                            <ul class="feature-list">
+                                <li><span class="icon">📝</span><strong>规则在 prompt 里</strong></li>
+                                <li><span class="icon">🤖</span><strong>模型负责遵守</strong></li>
+                                <li><span class="icon">⚠️</span><strong>可能跳步或分支判断漂移</strong></li>
+                            </ul>
+                        </div>
+                        <div class="intro-card">
+                            <h2>有状态机</h2>
+                            <p>程序记录当前状态，根据状态只开放有限 tool。LLM 不需要记完整流程，它只需要知道当前状态和当前允许做什么。</p>
+                            <ul class="feature-list">
+                                <li><span class="icon">🚦</span><strong>规则在程序里</strong></li>
+                                <li><span class="icon">🔒</span><strong>系统强制边界</strong></li>
+                                <li><span class="icon">✅</span><strong>更适合审批、审计、留痕</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>状态机 + LLM 的最小链路</span>
+                        </div>
+                        <pre><code>1. 程序读取当前 state
+2. 程序把当前 state 和 allowed_tools 传给 LLM
+3. LLM 在当前边界里选择一个 tool
+4. 程序执行 tool
+5. 程序根据 tool 结果切换 state
+6. 程序再发起下一轮 LLM 调用</code></pre>
+                    </div>
+
+                    <p>因此，只要是程序按状态机一轮一轮推进，本质上就是多次 LLM 调用。状态机和多 tool 不冲突，它们经常是叠在一起使用的。</p>
+                </div>
+
+                <div class="article-section">
+                    <h2>4. 为什么不直接在程序里硬编码调用 Tool</h2>
+                    <p>如果调哪个 tool、按什么顺序调、tool 返回后怎么处理、分支条件怎么判断，这些事情都已经是确定的，那就没有必要额外绕一层 LLM。程序直接调 tool 往往更快、更稳、更便宜。</p>
+
+                    <div class="decision-cards">
+                        <div class="decision-card">
+                            <div class="decision-icon">🧮</div>
+                            <h3>适合直接写死的部分</h3>
+                            <p>固定顺序、清晰规则、明确分支、结构化返回。比如 ETL、定时同步、固定审批节点的执行动作。</p>
+                        </div>
+                        <div class="decision-card">
+                            <div class="decision-icon">🗣️</div>
+                            <h3>适合交给 LLM 的部分</h3>
+                            <p>意图识别、tool 选择、长文本总结、日志归因、开放式语义判断、自然语言解释和追问。</p>
+                        </div>
+                    </div>
+
+                    <div class="article-footer">
+                        <p>最实用的原则：能写死，就别让 LLM 猜；需要理解和表达时，再让 LLM 参与。</p>
+                    </div>
+                </div>
+
+                <div class="article-section">
+                    <h2>5. 自定义 Tool 能不能放到平台端跑</h2>
+                    <p>这个问题最容易混淆。“模型能不能调用你的 tool”和“平台会不会替你执行你的业务代码”不是一回事。</p>
+
+                    <div class="table-container">
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>类型</th>
+                                    <th>平台负责什么</th>
+                                    <th>真正执行位置</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Function / Custom Tool</td>
+                                    <td>模型决定调哪个 tool、参数是什么</td>
+                                    <td>通常还是你自己的应用或服务</td>
+                                </tr>
+                                <tr>
+                                    <td>Remote MCP</td>
+                                    <td>模型通过标准接口使用你的远程工具</td>
+                                    <td>你自己部署的 MCP Server</td>
+                                </tr>
+                                <tr>
+                                    <td>Hosted Tools</td>
+                                    <td>平台直接提供能力，例如搜索或代码执行</td>
+                                    <td>OpenAI 平台侧</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>一个足够实用的判断</h4>
+                        <p>如果你问的是“模型能不能调用我定义的 tool”，答案通常是可以；如果你问的是“平台能不能替我托管任意自定义业务代码”，答案通常是否定的。自定义 tool 一般还是由你自己执行，或者由你自己部署成 MCP 服务。</p>
+                    </div>
+                </div>
+
+                <div class="article-section">
+                    <h2>6. 最后的设计建议</h2>
+                    <p>如果你只是想设计出一套大体合理的系统，不需要一开始就追求特别严格的理论模型。先按下面这套判断就够用了。</p>
+
+                    <div class="decision-cards">
+                        <div class="decision-card">
+                            <div class="decision-icon">⚡</div>
+                            <h3>开放任务</h3>
+                            <p>优先考虑多 tool。让 LLM 在一个连续任务里读资料、查信息、调用外部能力，然后总结。</p>
+                        </div>
+                        <div class="decision-card">
+                            <div class="decision-icon">🚦</div>
+                            <h3>高风险流程</h3>
+                            <p>外层加状态机，程序卡住权限和步骤，再让 LLM 在当前状态内使用 tool。这样既保留灵活性，也不把边界全押在 prompt 上。</p>
+                        </div>
+                    </div>
+
+                    <div class="article-footer">
+                        <p>一句话总结：多 tool 负责效率和灵活性，状态机负责边界和可靠性，程序负责控制，LLM 负责理解与表达。</p>
+                    </div>
+                </div>
+            </article>
+
+            <footer class="page-footer">
+                <p>本指南由 OpenClaw 社区维护 | 最后更新：2026-04-19</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>
